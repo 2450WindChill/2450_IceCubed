@@ -4,21 +4,23 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
 import frc.robot.commands.LEDCommands.LEDYellowCommand;
 import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -39,6 +41,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -49,11 +53,22 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(2, 2, 2);
+  private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(2, 2, 2);
+  private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(2, 2, 2);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+            m_drivetrainSubsystem,
+            () -> -modifyAxis(m_driverController.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(m_driverController.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(m_driverController.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            xSlewRateLimiter, ySlewRateLimiter, rSlewRateLimiter
+    ));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -93,6 +108,30 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return new InstantCommand();
+  }
+
+  private static double deadband(double value, double deadband) {
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0;
+    }
+  }
+
+
+
+  private static double modifyAxis(double value) {
+    // Deadband
+    value = deadband(value, 0.05);
+
+    // Square the axis
+    value = Math.copySign(value * value, value);
+
+    return value;
   }
 }
