@@ -79,6 +79,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
 
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
@@ -186,6 +190,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
+  }
+
+  public SlewRateLimiter getXLimiter() {
+        return xLimiter;
+  }
+
+  public SlewRateLimiter getYLimiter() {
+        return yLimiter;
+  }
+
+  public SlewRateLimiter getTurnLimiter() {
+        return turnLimiter;
   }
 
 

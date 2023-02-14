@@ -53,9 +53,9 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(2, 2, 2);
-  private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(2, 2, 2);
-  private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(2, 2, 2);
+  private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -64,9 +64,9 @@ public class RobotContainer {
 
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
-            () -> -modifyAxis(m_driverController.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driverController.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driverController.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            () -> -modifyAxis(m_driverController.getLeftY(), ySlewRateLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(m_driverController.getLeftX(), xSlewRateLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(m_driverController.getRightX(), rSlewRateLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
             xSlewRateLimiter, ySlewRateLimiter, rSlewRateLimiter
     ));
     // Configure the trigger bindings
@@ -125,13 +125,13 @@ public class RobotContainer {
 
 
 
-  private static double modifyAxis(double value) {
+  private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
     value = deadband(value, 0.05);
 
-    // Square the axis
-    value = Math.copySign(value * value, value);
-
+    // Square the axis for finer control at lower values
+    value = limiter.calculate(Math.copySign(value * value, value));
+    
     return value;
   }
 }
