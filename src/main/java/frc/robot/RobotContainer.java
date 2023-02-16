@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;

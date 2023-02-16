@@ -51,7 +51,7 @@ public class DefaultDriveCommand extends CommandBase {
                     -modifyAxis(translationXSupplier.getAsDouble(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(translationYSupplier.getAsDouble(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                     getTurnValue(),
-                    drivetrainSubsystem.getGyroscopeRotation()
+                    drivetrainSubsystem.getRotation()
                 )
             );
         } else {
