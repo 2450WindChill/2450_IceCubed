@@ -6,16 +6,21 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
 import frc.robot.commands.LEDCommands.LEDYellowCommand;
 import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
+
+import org.ejml.dense.row.MatrixFeatures_CDRM;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -41,12 +46,14 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
-  XboxController m_driverController = new XboxController(0);
+  static XboxController m_driverController = new XboxController(0);
   public final JoystickButton m_aButton = new JoystickButton(m_driverController, Button.kA.value);
   public final JoystickButton m_yButton = new JoystickButton(m_driverController, Button.kY.value);
   public final JoystickButton m_bButton = new JoystickButton(m_driverController, Button.kB.value);
@@ -62,6 +69,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -94,7 +102,7 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    m_drivetrainSubsystem.zeroGyroscope();
+    // m_drivetrainSubsystem.zeroGyroscope();
   }
 
   /**
@@ -105,6 +113,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new InstantCommand();
+  }
+
+  public static XboxController getClimbController() {
+    return m_driverController;
   }
 
   
