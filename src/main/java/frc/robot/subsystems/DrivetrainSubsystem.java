@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,6 +43,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
+
+   //TODO: Write a constant for speed limiter
   public static final double MAX_VELOCITY_METERS_PER_SECOND = (6380.0 / 60.0 *
           SdsModuleConfigurations.MK4I_L1.getDriveReduction() *
           SdsModuleConfigurations.MK4I_L1.getWheelDiameter() * Math.PI) * 8;
@@ -82,6 +85,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+
+  private SwerveDriveOdometry odometry;
 
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -203,6 +208,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public SlewRateLimiter getTurnLimiter() {
         return turnLimiter;
   }
+
+  public void zeroGyroscope() {
+        //Questionable zeroing of the yaw
+        m_pigeon.setYaw(0);
+        // odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon);
+      }
 
 
   @Override

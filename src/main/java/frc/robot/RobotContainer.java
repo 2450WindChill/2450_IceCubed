@@ -53,22 +53,15 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  // private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  // private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  // private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
+  private final JoystickButton orientationButton = new JoystickButton(m_driverController, Button.kBack.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -modifyAxis(m_driverController.getLeftY(), ySlewRateLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driverController.getLeftX(), xSlewRateLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driverController.getRightX(), rSlewRateLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-            xSlewRateLimiter, ySlewRateLimiter, rSlewRateLimiter
-    ));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -98,7 +91,10 @@ public class RobotContainer {
     (m_LightySubsystem))));
     m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+  }
 
+  public void resetGyro() {
+    m_drivetrainSubsystem.zeroGyroscope();
   }
 
   /**
@@ -111,27 +107,5 @@ public class RobotContainer {
     return new InstantCommand();
   }
 
-  private static double deadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0) {
-        return (value - deadband) / (1.0 - deadband);
-      } else {
-        return (value + deadband) / (1.0 - deadband);
-      }
-    } else {
-      return 0.0;
-    }
-  }
-
-
-
-  private static double modifyAxis(double value, SlewRateLimiter limiter) {
-    // Deadband
-    value = deadband(value, 0.05);
-
-    // Square the axis for finer control at lower values
-    value = limiter.calculate(Math.copySign(value * value, value));
-    
-    return value;
-  }
+  
 }
