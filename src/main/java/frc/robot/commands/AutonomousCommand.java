@@ -17,7 +17,7 @@ public class AutonomousCommand extends SequentialCommandGroup {
     addRequirements(m_driveTrainSub);
 
     addCommands(
-        //new TimedDriveFoward(m_driveTrainSub));
-    );
+        new TimedDriveFoward(m_driveTrainSub)
+      );
   }
 }
