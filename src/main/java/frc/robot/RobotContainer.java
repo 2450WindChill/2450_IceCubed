@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
@@ -15,7 +14,7 @@ import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
@@ -43,7 +42,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
@@ -60,10 +58,6 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  // private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  // private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  // private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  private final JoystickButton orientationButton = new JoystickButton(m_driverController, Button.kBack.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
