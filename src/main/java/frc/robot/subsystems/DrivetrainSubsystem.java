@@ -4,11 +4,31 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.WindChillSwerveModule;
 
 public class DrivetrainSubsystem extends SubsystemBase {
+  private WindChillSwerveModule[] swerveModules;
   /** Creates a new ExampleSubsystem. */
-  public DrivetrainSubsystem() {}
+  public DrivetrainSubsystem() {
+    swerveModules = new WindChillSwerveModule[] {
+      new WindChillSwerveModule(0, Constants.Mod0.constants),
+      new WindChillSwerveModule(1, Constants.Mod1.constants),
+      new WindChillSwerveModule(2, Constants.Mod2.constants),
+      new WindChillSwerveModule(3, Constants.Mod3.constants)
+    };
+  }
+
+  public void drive(Translation2d translation, double rotation){
+    SwerveModuleState[] swerveModuleStates =
+        Constants.swerveKinematics.toSwerveModuleStates(
+          new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+  }
 
   public boolean exampleCondition() {
 

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AutonomousCommand;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
@@ -45,7 +46,7 @@ public class RobotContainer {
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -64,6 +65,14 @@ public class RobotContainer {
    */
   public RobotContainer() {
     m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+
+    m_drivetrainSubsystem.setDefaultCommand(
+        new DefaultDriveCommand(
+            m_drivetrainSubsystem,
+            () -> -m_driverController.getLeftY(),
+            () -> -m_driverController.getLeftX(),
+            () -> -m_driverController.getRightX()
+          ));
     // Configure the trigger bindings
     configureBindings();
   }
