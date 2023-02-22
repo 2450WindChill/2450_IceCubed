@@ -28,6 +28,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates =
         Constants.swerveKinematics.toSwerveModuleStates(
           new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+
+          for (WindChillSwerveModule mod : swerveModules) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+          }
   }
 
   public boolean exampleCondition() {

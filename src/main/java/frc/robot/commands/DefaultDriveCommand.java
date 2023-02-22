@@ -11,6 +11,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
@@ -18,6 +19,9 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public class DefaultDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
+  private DoubleSupplier translationSupplier;
+  private DoubleSupplier strafeSupplier;
+  private DoubleSupplier rotationSupplier;
 
   /**
    * Creates a new ExampleCommand.
@@ -33,6 +37,10 @@ public class DefaultDriveCommand extends CommandBase {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+
+    this.translationSupplier = translationSupplier;
+    this.strafeSupplier = strafeSupplier;
+    this.rotationSupplier = rotationSupplier;
   }
 
   // Called when the command is initially scheduled.
@@ -44,6 +52,14 @@ public class DefaultDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_subsystem.drive();
+    // Slew rate would be added here using .calculate
+    double translationVal = translationSupplier.getAsDouble();
+    double strafeVal = strafeSupplier.getAsDouble();
+    double rotationVal = rotationSupplier.getAsDouble();
+
+    m_subsystem.drive(
+      new Translation2d(translationVal, strafeVal),
+      rotationVal
+    );
   }
 }
