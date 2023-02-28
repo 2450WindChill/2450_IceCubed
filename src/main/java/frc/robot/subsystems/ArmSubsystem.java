@@ -11,11 +11,17 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public final CANSparkMax ArmMotor = new CANSparkMax(14, MotorType.kBrushless);
+  public final CANSparkMax armMotor = new CANSparkMax(14, MotorType.kBrushless);
+
+  public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushless);
+  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushless);
+
+  public double manipulatorSpeed;
  
   public ArmSubsystem() {
   }
@@ -23,17 +29,18 @@ public class ArmSubsystem extends SubsystemBase {
   public void ManualInputs(XboxController xbox) {
     // Joystick drift protection
     if ((xbox.getLeftX() < .15) && (xbox.getLeftX() > -0.15)) {
-      ArmMotor.set(0);
+      armMotor.set(0);
     }
     // Otherwise move motors normally
     else {
-      ArmMotor.set(-xbox.getLeftX()/8);
+      armMotor.set(-xbox.getLeftX()/8);
     }
 }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   @Override
