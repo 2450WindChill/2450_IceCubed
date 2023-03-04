@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.SolenoidCommands;
 
 import frc.robot.subsystems.PneumaticsSubsystem;
@@ -12,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class ExtendSolenoidCommand extends CommandBase {
+public class LockArmCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final PneumaticsSubsystem m_subsystem;
 
@@ -21,7 +17,7 @@ public class ExtendSolenoidCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExtendSolenoidCommand(PneumaticsSubsystem subsystem) {
+  public LockArmCommand(PneumaticsSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

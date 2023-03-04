@@ -13,8 +13,8 @@ import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
 import frc.robot.commands.LEDCommands.LEDYellowCommand;
-import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
-import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
+import frc.robot.commands.SolenoidCommands.LockArmCommand;
+import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -103,8 +103,8 @@ public class RobotContainer {
     m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
-    m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
-    m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+    m_leftBumper.onTrue(new LockArmCommand(m_PneumaticsSubsystem));
+    m_rightBumper.onTrue(new UnlockArmCommand(m_PneumaticsSubsystem));
 
     m_yButton.whileTrue(new ActivateIntake(m_ArmSubsystem));
     m_xButton.whileTrue(new Place(m_ArmSubsystem));

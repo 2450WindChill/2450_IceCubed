@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.SolenoidCommands;
 
 import frc.robot.subsystems.PneumaticsSubsystem;
@@ -12,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class RetractSolenoidCommand extends CommandBase {
+public class UnlockArmCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final PneumaticsSubsystem m_subsystem;
 
@@ -21,7 +17,7 @@ public class RetractSolenoidCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RetractSolenoidCommand(PneumaticsSubsystem subsystem) {
+  public UnlockArmCommand(PneumaticsSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -31,7 +27,7 @@ public class RetractSolenoidCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.pcmSolenoid.set(Value.kReverse);
-    System.err.println("RETRACTING");
+    System.err.println("EXTENDING");
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +37,7 @@ public class RetractSolenoidCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.err.println("ENDING RETRACT");
+    System.err.println("ENDING EXTEND");
   }
 
   // Returns true when the command should end.
