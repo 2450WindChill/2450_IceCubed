@@ -24,6 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
   public double manipulatorSpeed;
  
   public ArmSubsystem() {
+    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   public void ManualInputs(XboxController xbox) {

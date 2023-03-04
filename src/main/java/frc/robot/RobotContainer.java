@@ -106,8 +106,8 @@ public class RobotContainer {
     m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
 
-    m_yButton.onTrue(new ActivateIntake(m_ArmSubsystem));
-    m_xButton.onTrue(new Place(m_ArmSubsystem));
+    m_yButton.whileTrue(new ActivateIntake(m_ArmSubsystem));
+    m_xButton.whileTrue(new Place(m_ArmSubsystem));
   }
 
   public void resetGyro() {
