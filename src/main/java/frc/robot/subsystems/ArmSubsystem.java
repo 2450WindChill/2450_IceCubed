@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public final CANSparkMax armMotor = new CANSparkMax(14, MotorType.kBrushless);
+  public final RelativeEncoder armEncoder = armMotor.getEncoder();
 
   public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushless);
   public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushless);

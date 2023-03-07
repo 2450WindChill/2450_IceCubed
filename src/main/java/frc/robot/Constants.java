@@ -149,4 +149,15 @@ public final class Constants {
     public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
         canCoderID, angleOffset);
   }
+
+  public static double pidTolerance = 1;
+  public static double nonPidTolerance = 5;
+
+  public static double backIntakeAngle = 0;
+  public static double stowAngle = 0;
+  public static double singleSubstationAngle = 0;
+  public static double doubleSubstationAngle = 0;
+  public static double cubeShootingAngle = 0;
+  public static double midRowPlacingAngle = 0;
+  public static double frontIntake = 0;
 }

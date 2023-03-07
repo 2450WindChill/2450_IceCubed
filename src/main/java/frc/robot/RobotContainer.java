@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.commands.DrivetrainCommands.AutonomousCommand;
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
+import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
+import frc.robot.commands.ArmCommands.MoveToPositionPID;
 import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
@@ -48,7 +50,7 @@ public class RobotContainer {
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -68,13 +70,13 @@ public class RobotContainer {
   public RobotContainer() {
     m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
 
-    m_drivetrainSubsystem.setDefaultCommand(
-        new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -m_driverController.getLeftY(),
-            () -> -m_driverController.getLeftX(),
-            () -> -m_driverController.getRightX()
-          ));
+    // m_drivetrainSubsystem.setDefaultCommand(
+    //     new DefaultDriveCommand(
+    //         m_drivetrainSubsystem,
+    //         () -> -m_driverController.getLeftY(),
+    //         () -> -m_driverController.getLeftX(),
+    //         () -> -m_driverController.getRightX()
+    //       ));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -103,11 +105,14 @@ public class RobotContainer {
     m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
-    m_leftBumper.onTrue(new LockArmCommand(m_PneumaticsSubsystem));
-    m_rightBumper.onTrue(new UnlockArmCommand(m_PneumaticsSubsystem));
+    // m_leftBumper.onTrue(new LockArmCommand(m_PneumaticsSubsystem));
+    // m_rightBumper.onTrue(new UnlockArmCommand(m_PneumaticsSubsystem));
 
     m_yButton.whileTrue(new ActivateIntake(m_ArmSubsystem));
     m_xButton.whileTrue(new Place(m_ArmSubsystem));
+
+    m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
+    m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));
   }
 
   public void resetGyro() {
