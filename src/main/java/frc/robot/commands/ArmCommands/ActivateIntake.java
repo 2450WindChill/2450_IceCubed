@@ -4,6 +4,7 @@
 
 package frc.robot.commands.ArmCommands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -37,8 +38,8 @@ public class ActivateIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.topManipulatorMotor.set(m_subsystem.manipulatorSpeed);
-    m_subsystem.bottomManipulatorMotor.set(-m_subsystem.manipulatorSpeed);
+    m_subsystem.topManipulatorMotor.set(Constants.manipulatorIntakeSpeed);
+    m_subsystem.bottomManipulatorMotor.set(-Constants.manipulatorIntakeSpeed);
   }
 
   // Called once the command ends or is interrupted.

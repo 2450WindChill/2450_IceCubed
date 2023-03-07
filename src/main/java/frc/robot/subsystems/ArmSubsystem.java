@@ -23,10 +23,10 @@ public class ArmSubsystem extends SubsystemBase {
   public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushless);
   public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushless);
 
-  public double manipulatorSpeed;
+  // public double manipulatorSpeed;
  
   public ArmSubsystem() {
-    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+    // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   public void ManualInputs(XboxController xbox) {
@@ -43,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+    // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   @Override

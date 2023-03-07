@@ -9,7 +9,7 @@ import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
-import frc.robot.commands.ArmCommands.Place;
+import frc.robot.commands.ArmCommands.ActivateOuttake;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
@@ -109,7 +109,7 @@ public class RobotContainer {
     // m_rightBumper.onTrue(new UnlockArmCommand(m_PneumaticsSubsystem));
 
     m_yButton.whileTrue(new ActivateIntake(m_ArmSubsystem));
-    m_xButton.whileTrue(new Place(m_ArmSubsystem));
+    m_xButton.whileTrue(new ActivateOuttake(m_ArmSubsystem));
 
     m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
     m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));

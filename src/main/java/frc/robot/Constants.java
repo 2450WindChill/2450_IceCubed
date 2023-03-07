@@ -160,4 +160,7 @@ public final class Constants {
   public static double cubeShootingAngle = 0;
   public static double midRowPlacingAngle = 0;
   public static double frontIntake = 0;
+
+  public static double manipulatorIntakeSpeed = 0.5;
+  public static double manipulatorOuttakeSpeed = 0.5;
 }

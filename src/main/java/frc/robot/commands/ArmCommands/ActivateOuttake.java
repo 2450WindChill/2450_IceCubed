@@ -4,6 +4,7 @@
 
 package frc.robot.commands.ArmCommands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class Place extends CommandBase {
+public class ActivateOuttake extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ArmSubsystem m_subsystem;
 
@@ -22,7 +23,7 @@ public class Place extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Place(ArmSubsystem armSubsystem) {
+  public ActivateOuttake(ArmSubsystem armSubsystem) {
     m_subsystem = armSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(armSubsystem);
@@ -37,8 +38,8 @@ public class Place extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.topManipulatorMotor.set(-m_subsystem.manipulatorSpeed);
-    m_subsystem.bottomManipulatorMotor.set(m_subsystem.manipulatorSpeed);
+    m_subsystem.topManipulatorMotor.set(-Constants.manipulatorOuttakeSpeed);
+    m_subsystem.bottomManipulatorMotor.set(Constants.manipulatorOuttakeSpeed);
   }
 
   // Called once the command ends or is interrupted.
