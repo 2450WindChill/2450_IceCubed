@@ -45,9 +45,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
-  private final LightySubsystem m_LightySubsystem = new LightySubsystem();
-  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
+  // private final LightySubsystem m_LightySubsystem = new LightySubsystem();
+  // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
@@ -66,13 +66,13 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+    // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
 
     m_drivetrainSubsystem.setDefaultCommand(
         new DefaultDriveCommand(
             m_drivetrainSubsystem,
             () -> -m_driverController.getLeftY(),
-            () -> -m_driverController.getLeftX(),
+            () -> m_driverController.getLeftX(),
             () -> -m_driverController.getRightX()
           ));
     // Configure the trigger bindings
@@ -99,15 +99,15 @@ public class RobotContainer {
     
     // m_yButton.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
     // m_xButton.onTrue(new LEDBlueCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
-    (m_LightySubsystem))));
+    // m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    // m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
+    // (m_LightySubsystem))));
 
-    m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
-    m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+    // m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
+    // m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
 
-    m_yButton.onTrue(new ActivateIntake(m_ArmSubsystem));
-    m_xButton.onTrue(new Place(m_ArmSubsystem));
+    // m_yButton.onTrue(new ActivateIntake(m_ArmSubsystem));
+    // m_xButton.onTrue(new Place(m_ArmSubsystem));
   }
 
   public void resetGyro() {
