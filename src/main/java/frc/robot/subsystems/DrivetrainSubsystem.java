@@ -44,6 +44,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
+  public void autonomousDrive(double xSpeed, double ySpeed, double rotation) {
+    SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+        new ChassisSpeeds(xSpeed, ySpeed, rotation)
+      );
+
+    for (WindChillSwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+    }
+  }
+
+  public double getAverageEncoderVal(){
+    double averageEncoderVal = 0;
+    for (WindChillSwerveModule mod : swerveModules) {
+      averageEncoderVal += mod.getDriveEncoder();
+    }
+    
+    return averageEncoderVal/4;
+  }
+
   public void zeroGyro() {
     gyro.setYaw(0);
   }
@@ -63,6 +82,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+      
+      SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
     }
 
   }

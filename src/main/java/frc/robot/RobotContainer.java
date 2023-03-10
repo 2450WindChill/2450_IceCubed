@@ -4,11 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.commands.DrivetrainCommands.AutonomousCommand;
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
+import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
@@ -61,6 +61,7 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,7 +74,7 @@ public class RobotContainer {
             m_drivetrainSubsystem,
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
-            () -> -m_driverController.getRightX()
+            () -> m_driverController.getRightX()
           ));
     // Configure the trigger bindings
     configureBindings();
@@ -96,12 +97,14 @@ public class RobotContainer {
   private void configureBindings() {
     // m_aButton.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     // m_yButton.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+    m_aButton.onTrue(new DriveDistanceX(m_drivetrainSubsystem, 1));
     
     // m_yButton.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
     // m_xButton.onTrue(new LEDBlueCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
     // m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
     // m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     // (m_LightySubsystem))));
+
 
     // m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     // m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
