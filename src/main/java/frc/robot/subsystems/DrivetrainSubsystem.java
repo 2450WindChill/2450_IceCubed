@@ -27,11 +27,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     zeroGyro();
 
     swerveModules = new WindChillSwerveModule[] {
-        new WindChillSwerveModule(0, Constants.FrontLeftModule.constants),
-        new WindChillSwerveModule(1, Constants.FrontRightModule.constants),
-        new WindChillSwerveModule(2, Constants.BackLeftModule.constants),
-        new WindChillSwerveModule(3, Constants.BackRightModule.constants)
-    };
+      new WindChillSwerveModule(0, Constants.FrontLeftModule.constants),
+      new WindChillSwerveModule(1, Constants.FrontRightModule.constants),
+      new WindChillSwerveModule(2, Constants.BackLeftModule.constants),
+      new WindChillSwerveModule(3, Constants.BackRightModule.constants)
+  };
   }
 
   public void drive(Translation2d translation, double rotation) {
