@@ -20,8 +20,8 @@ public class ArmSubsystem extends SubsystemBase {
   public final CANSparkMax armMotor = new CANSparkMax(14, MotorType.kBrushless);
   public final RelativeEncoder armEncoder = armMotor.getEncoder();
 
-  public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushless);
-  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushless);
+  public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushed);
+  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushed);
 
   // public double manipulatorSpeed;
  
