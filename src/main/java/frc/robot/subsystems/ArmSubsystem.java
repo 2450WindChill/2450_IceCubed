@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,6 +26,8 @@ public class ArmSubsystem extends SubsystemBase {
   public double manipulatorSpeed;
  
   public ArmSubsystem() {
+    ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    tab.add("Arm", armMotor.getEncoder().getPosition());
   }
 
   public void ManualInputs(XboxController xbox) {
@@ -41,6 +45,8 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+
+    SmartDashboard.putNumber("Arrm",armMotor.getEncoder().getPosition());
   }
 
   @Override
