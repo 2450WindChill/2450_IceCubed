@@ -153,13 +153,13 @@ public final class Constants {
   public static double pidTolerance = 1;
   public static double nonPidTolerance = 5;
 
-  public static double backIntakeAngle = 0;
-  public static double stowAngle = 0;
+  // Held by PID
+  public static double frontIntakeAngle = 0;
   public static double singleSubstationAngle = 0;
-  public static double doubleSubstationAngle = 0;
-  public static double cubeShootingAngle = 0;
+
+  // Held by ratchet
   public static double midRowPlacingAngle = 0;
-  public static double frontIntake = 0;
+  public static double backIntake = 0;
 
   public static double manipulatorIntakeSpeed = 0.5;
   public static double manipulatorOuttakeSpeed = 0.5;

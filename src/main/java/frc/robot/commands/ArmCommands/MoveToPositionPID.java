@@ -24,9 +24,13 @@ public class MoveToPositionPID extends CommandBase {
 
   private double currentAngle;
 
-  public MoveToPositionPID(ArmSubsystem subsystem, double targetPosition) {
+  private boolean movingUp;
+  private boolean m_isRatcheting;
+
+  public MoveToPositionPID(ArmSubsystem subsystem, double targetPosition, boolean isRatcheting) {
     m_armSubsystem = subsystem;
     m_targetPosition = targetPosition;
+    m_isRatcheting = isRatcheting;
 
     addRequirements(subsystem);
   }
@@ -46,6 +50,12 @@ public class MoveToPositionPID extends CommandBase {
     SmartDashboard.putNumber("D Gain", kD);
 
     SmartDashboard.putNumber("Set Rotations", 0);
+
+    if (m_targetPosition > currentAngle) {
+      movingUp = true;
+    } else {
+      movingUp = false;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,6 +97,13 @@ public class MoveToPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (!m_isRatcheting) {
       return false;
+    }
+    if (movingUp) {
+      return currentAngle >= (m_targetPosition - Constants.pidTolerance);
+    } else {
+      return currentAngle <= (m_targetPosition + Constants.pidTolerance);
+      }
     }
 }

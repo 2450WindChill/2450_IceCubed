@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class ArmSequentialCommand extends SequentialCommandGroup {
+public class NonRatchetArmSequentialCommand extends SequentialCommandGroup {
   public ArmSubsystem m_ArmSubsystem;
   public PneumaticsSubsystem m_PneumaticsSubsystem;
   public double m_targetPosition;
 
-  public ArmSequentialCommand(RobotContainer robotContainer, ArmSubsystem ArmSubsystem, PneumaticsSubsystem PneumaticsSubsystem, double targetPosition) {
+  public NonRatchetArmSequentialCommand(ArmSubsystem ArmSubsystem, PneumaticsSubsystem PneumaticsSubsystem, double targetPosition) {
     m_ArmSubsystem = ArmSubsystem;
     m_PneumaticsSubsystem = PneumaticsSubsystem;
     m_targetPosition = targetPosition;
@@ -26,8 +26,7 @@ public class ArmSequentialCommand extends SequentialCommandGroup {
     addCommands(
         new UnlockArmCommand(m_PneumaticsSubsystem),
         new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition),
-        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition),
-        new LockArmCommand(m_PneumaticsSubsystem)
+        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, false)
       );
   }
 }

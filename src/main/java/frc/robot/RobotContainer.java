@@ -9,6 +9,8 @@ import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
+import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
+import frc.robot.commands.ArmCommands.RatchetArmSequentialCommand;
 import frc.robot.commands.ArmCommands.ActivateOuttake;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
@@ -96,23 +98,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // m_aButton.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
-    // m_yButton.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
-    
-    // m_yButton.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    // m_xButton.onTrue(new LEDBlueCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
+
+    m_leftBumper.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    m_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
-    // m_leftBumper.onTrue(new LockArmCommand(m_PneumaticsSubsystem));
-    // m_rightBumper.onTrue(new UnlockArmCommand(m_PneumaticsSubsystem));
+    m_aButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    m_bButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    m_xButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    m_yButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
-    m_yButton.whileTrue(new ActivateIntake(m_ArmSubsystem));
-    m_xButton.whileTrue(new ActivateOuttake(m_ArmSubsystem));
-
-    m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
-    m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));
+    // m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
+    // m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));
   }
 
   public void resetGyro() {
