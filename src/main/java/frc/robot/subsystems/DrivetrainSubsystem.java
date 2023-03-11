@@ -27,11 +27,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     zeroGyro();
 
     swerveModules = new WindChillSwerveModule[] {
-        new WindChillSwerveModule(0, Constants.FrontLeftModule.constants),
-        new WindChillSwerveModule(1, Constants.FrontRightModule.constants),
-        new WindChillSwerveModule(2, Constants.BackLeftModule.constants),
-        new WindChillSwerveModule(3, Constants.BackRightModule.constants)
-    };
+      new WindChillSwerveModule(0, Constants.FrontLeftModule.constants),
+      new WindChillSwerveModule(1, Constants.FrontRightModule.constants),
+      new WindChillSwerveModule(2, Constants.BackLeftModule.constants),
+      new WindChillSwerveModule(3, Constants.BackRightModule.constants)
+  };
   }
 
   public void drive(Translation2d translation, double rotation) {
@@ -42,6 +42,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
     for (WindChillSwerveModule mod : swerveModules) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
     }
+  }
+
+  public void autonomousDrive(double xSpeed, double ySpeed, double rotation) {
+    SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+        new ChassisSpeeds(xSpeed, ySpeed, rotation)
+      );
+
+    for (WindChillSwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+    }
+  }
+
+  public double getAverageEncoderVal(){
+    double averageEncoderVal = 0;
+    for (WindChillSwerveModule mod : swerveModules) {
+      averageEncoderVal += mod.getDriveEncoder();
+    }
+    
+    return averageEncoderVal/4;
   }
 
   public void zeroGyro() {
@@ -63,6 +82,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+      
+      SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
     }
 
   }
