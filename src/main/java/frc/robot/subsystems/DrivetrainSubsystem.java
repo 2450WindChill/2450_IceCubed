@@ -54,14 +54,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
-  public double getAverageEncoderVal(){
-    double averageEncoderVal = 0;
-    for (WindChillSwerveModule mod : swerveModules) {
-      averageEncoderVal += mod.getDriveEncoder();
-    }
+  // public double getAverageEncoderVal(){
+  //   double averageEncoderVal = 0;
+  //   for (WindChillSwerveModule mod : swerveModules) {
+  //     averageEncoderVal += mod.getDriveEncoder();
+  //   }
     
-    return averageEncoderVal/4;
-  }
+  //   return averageEncoderVal/4;
+  // }
+
+  public double getFrontLeftEncoderVal(){
+      double frontLeftEncoderVal = swerveModules[0].getDriveEncoder();
+      
+      return frontLeftEncoderVal;
+    }
 
   public void zeroGyro() {
     gyro.setYaw(0);
@@ -83,7 +89,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
       
-      SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
+      // SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
     }
 
   }

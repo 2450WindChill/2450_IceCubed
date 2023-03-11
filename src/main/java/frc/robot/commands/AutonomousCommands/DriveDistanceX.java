@@ -27,7 +27,7 @@ public class DriveDistanceX extends CommandBase {
    */
   public DriveDistanceX(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet) {
     m_driveSubsystem = drivetrainSubsystem;
-    currentLocationFeet = m_driveSubsystem.getAverageEncoderVal();
+    currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal();
     targetLocationFeet = desiredDistanceFeet - currentLocationFeet;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSubsystem);
@@ -42,7 +42,7 @@ public class DriveDistanceX extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentLocationRotations = m_driveSubsystem.getAverageEncoderVal();
+    double currentLocationRotations = m_driveSubsystem.getFrontLeftEncoderVal();
     currentLocationFeet = currentLocationRotations / Constants.rotationsPerOneFoot;
 
   }
