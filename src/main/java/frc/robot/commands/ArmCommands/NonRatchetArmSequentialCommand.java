@@ -6,7 +6,9 @@ import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
+import frc.robot.subsystems.ArmSubsystem.State;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,10 +25,20 @@ public class NonRatchetArmSequentialCommand extends SequentialCommandGroup {
 
     addRequirements(ArmSubsystem, PneumaticsSubsystem);
 
-    addCommands(
+    if (ArmSubsystem.state == State.Joystick_State) {
+      return;
+    }
+
+    else if (ArmSubsystem.state == State.Button_State) {
+      addCommands(
         new UnlockArmCommand(m_PneumaticsSubsystem),
         new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition),
-        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, false)
+        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, true),
+        new LockArmCommand(m_PneumaticsSubsystem)
       );
   }
+    else {
+      return;
+    }
+}
 }

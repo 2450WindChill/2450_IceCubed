@@ -82,6 +82,7 @@ public class MoveToPositionPID extends CommandBase {
       kD = d;
     }
 
+    System.err.println("MovetoPosition WITH PID");
     m_pidController.setReference(m_targetPosition, CANSparkMax.ControlType.kPosition);
     SmartDashboard.putNumber("Target", m_targetPosition);
     SmartDashboard.putNumber("Current Angle", m_armSubsystem.armEncoder.getPosition());

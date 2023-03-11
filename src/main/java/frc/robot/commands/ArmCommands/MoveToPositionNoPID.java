@@ -42,12 +42,14 @@ public class MoveToPositionNoPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+   
     if (m_targetPosition > currentAngle){
         m_armSubsystem.armMotor.set(0.3);
     } else {
         m_armSubsystem.armMotor.set(-0.3);
     }
     
+    System.err.println("MovetoPosition NO PID");
     SmartDashboard.putNumber("Target", m_targetPosition);
     SmartDashboard.putNumber("Current Angle", m_armSubsystem.armEncoder.getPosition());
     currentAngle = m_armSubsystem.armEncoder.getPosition();
@@ -56,7 +58,8 @@ public class MoveToPositionNoPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    System.err.println("STOPPPPPINGGGGGGGGGGGGGGGGGGGGGGGGGGG: INterrupted? " + interrupted );
+
   }
 
   // Returns true when the command should end.
@@ -64,16 +67,19 @@ public class MoveToPositionNoPID extends CommandBase {
   public boolean isFinished() {
     if (m_targetPosition > currentAngle) {
         if (currentAngle >= (m_targetPosition - Constants.nonPidTolerance)) {
+          System.err.println("Stopped MovetoPosition NO PID");
             return true;
         } else {
             return false;
         }
     } else {
         if (currentAngle <= (m_targetPosition + Constants.nonPidTolerance)) {
+          System.err.println("Stopped MovetoPosition NO PID");
             return true;
         } else {
             return false;
         }
+      
     }
   }
 }

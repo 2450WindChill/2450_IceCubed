@@ -59,12 +59,14 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   static XboxController m_driverController = new XboxController(0);
-  public final JoystickButton m_aButton = new JoystickButton(m_driverController, Button.kA.value);
-  public final JoystickButton m_yButton = new JoystickButton(m_driverController, Button.kY.value);
-  public final JoystickButton m_bButton = new JoystickButton(m_driverController, Button.kB.value);
-  public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
-  public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
-  public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  static XboxController m_operatorController = new XboxController(1);
+  
+  public final JoystickButton m_aButton = new JoystickButton(m_operatorController, Button.kA.value);
+  public final JoystickButton m_yButton = new JoystickButton(m_operatorController, Button.kY.value);
+  public final JoystickButton m_bButton = new JoystickButton(m_operatorController, Button.kB.value);
+  public final JoystickButton m_xButton = new JoystickButton(m_operatorController, Button.kX.value);
+  public final JoystickButton m_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
+  public final JoystickButton m_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -103,10 +105,10 @@ public class RobotContainer {
     m_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
-    m_aButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
-    m_bButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
-    m_xButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
-    m_yButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
+    m_aButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    m_bButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    m_xButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    m_yButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
     // m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
     // m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));
@@ -126,9 +128,11 @@ public class RobotContainer {
     return new InstantCommand();
   }
 
-  public static XboxController getClimbController() {
+  public static XboxController getDriveController() {
     return m_driverController;
   }
 
-  
+  public static XboxController getOperatorController() {
+    return m_operatorController;
+  }
 }
