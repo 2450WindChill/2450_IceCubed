@@ -6,9 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +36,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
       new WindChillSwerveModule(1, Constants.FrontRightModule.constants),
       new WindChillSwerveModule(2, Constants.BackLeftModule.constants),
       new WindChillSwerveModule(3, Constants.BackRightModule.constants)
-  };
+    };
+
+    Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
+    Translation2d m_frontRightLocation = new Translation2d(Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
+    Translation2d m_backLeftLocation = new Translation2d(-Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
+    Translation2d m_backRightLocation = new Translation2d(-Constants.wheelBase / 2.0, -Constants.trackWidth / 2.0);
+
+// Creating my kinematics object using the module locations
+SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
+);
+
+    SwerveDriveOdometry swerveOdometry = new SwerveDriveOdometry(Constants.swerveKinematics,
+    getRotation2d(),
+    new SwerveModulePosition[] {
+      m_frontLeftLocation,
+      m_frontRightLocation,
+      m_backLeftLocation,
+      m_backRightLocation
+    });
   }
 
   public void drive(Translation2d translation, double rotation) {
@@ -54,14 +78,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
-  // public double getAverageEncoderVal(){
-  //   double averageEncoderVal = 0;
-  //   for (WindChillSwerveModule mod : swerveModules) {
-  //     averageEncoderVal += mod.getDriveEncoder();
-  //   }
-    
-  //   return averageEncoderVal/4;
-  // }
+  public Rotation2d getRotation2d() {
+    Rotation2d rotation2d = Rotation2d.fromDegrees(gyro.getYaw());
+
+    return rotation2d;
+  }
 
   public double getFrontLeftEncoderVal(){
       double frontLeftEncoderVal = swerveModules[0].getDriveEncoder();

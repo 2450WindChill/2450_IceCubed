@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -68,7 +69,8 @@ public final class Constants {
       // Back left
       new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
       // Back right
-      new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+      new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)
+    );
 
   /* Swerve Voltage Compensation */
   public static final double voltageComp = 12.0;
