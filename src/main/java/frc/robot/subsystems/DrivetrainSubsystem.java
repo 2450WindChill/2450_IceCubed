@@ -23,6 +23,7 @@ import frc.robot.WindChillSwerveModule;
 public class DrivetrainSubsystem extends SubsystemBase {
   private final Pigeon2 gyro;
   private WindChillSwerveModule[] swerveModules;
+  public SwerveDriveOdometry swerveOdometry;
 
   /** Creates a new ExampleSubsystem. */
   public DrivetrainSubsystem() {
@@ -38,29 +39,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
       new WindChillSwerveModule(3, Constants.BackRightModule.constants)
     };
 
-    Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
-    Translation2d m_frontRightLocation = new Translation2d(Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
-    Translation2d m_backLeftLocation = new Translation2d(-Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
-    Translation2d m_backRightLocation = new Translation2d(-Constants.wheelBase / 2.0, -Constants.trackWidth / 2.0);
-
-
-// Creating my kinematics object using the module locations
-SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
-);
-
-    SwerveDriveOdometry swerveOdometry = new SwerveDriveOdometry(
+    swerveOdometry = new SwerveDriveOdometry(
       Constants.swerveKinematics,
-      getRotation2d(),
+      getGyroAsRotation2d(),
       getModulePositions(),
       new Pose2d(0, 0, new Rotation2d(0))
     );
   }
 
   public void drive(Translation2d translation, double rotation) {
+    // SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+    //     new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
+    //   );
+
     SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
-      );
+      ChassisSpeeds.fromFieldRelativeSpeeds(
+        translation.getX(), 
+        translation.getY(), 
+        rotation, 
+        getGyroAsRotation2d()
+      )
+    );
 
     for (WindChillSwerveModule mod : swerveModules) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
@@ -77,7 +76,7 @@ SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     }
   }
 
-  public Rotation2d getRotation2d() {
+  public Rotation2d getGyroAsRotation2d() {
     Rotation2d rotation2d = Rotation2d.fromDegrees(gyro.getYaw());
 
     return rotation2d;
@@ -95,16 +94,10 @@ SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       double frontLeftEncoderVal = swerveModules[0].getDriveEncoder();
       
       return frontLeftEncoderVal;
-    }
+  }
 
   public void zeroGyro() {
     gyro.setYaw(0);
-  }
-
-
-  public boolean exampleCondition() {
-
-    return false;
   }
 
   @Override
@@ -120,6 +113,10 @@ SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       // SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
     }
 
+    swerveOdometry.update(
+      getGyroAsRotation2d(),
+      getModulePositions()
+    );
   }
 
   @Override
