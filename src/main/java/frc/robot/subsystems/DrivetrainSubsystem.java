@@ -43,19 +43,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Translation2d m_backLeftLocation = new Translation2d(-Constants.wheelBase / 2.0, Constants.trackWidth / 2.0);
     Translation2d m_backRightLocation = new Translation2d(-Constants.wheelBase / 2.0, -Constants.trackWidth / 2.0);
 
+
 // Creating my kinematics object using the module locations
 SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
 );
 
-    SwerveDriveOdometry swerveOdometry = new SwerveDriveOdometry(Constants.swerveKinematics,
-    getRotation2d(),
-    new SwerveModulePosition[] {
-      m_frontLeftLocation,
-      m_frontRightLocation,
-      m_backLeftLocation,
-      m_backRightLocation
-    });
+    SwerveDriveOdometry swerveOdometry = new SwerveDriveOdometry(
+      Constants.swerveKinematics,
+      getRotation2d(),
+      getModulePositions(),
+      new Pose2d(0, 0, new Rotation2d(0))
+    );
   }
 
   public void drive(Translation2d translation, double rotation) {
@@ -83,6 +82,14 @@ SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
 
     return rotation2d;
   }
+
+  public SwerveModulePosition[] getModulePositions(){
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for(WindChillSwerveModule mod : swerveModules){
+        positions[mod.moduleNumber] = mod.getPosition();
+    }
+    return positions;
+}
 
   public double getFrontLeftEncoderVal(){
       double frontLeftEncoderVal = swerveModules[0].getDriveEncoder();

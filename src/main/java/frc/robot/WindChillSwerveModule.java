@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.util.CANCoderUtil;
 import frc.lib.util.CANSparkMaxUtil;
@@ -148,6 +149,11 @@ public class WindChillSwerveModule {
         angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
       }
 
-      
+      public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(
+            (getDriveEncoder() / Constants.rotationsPerOneFoot) * 0.3048, 
+            getAngle()
+        );
+    }
 }
 
