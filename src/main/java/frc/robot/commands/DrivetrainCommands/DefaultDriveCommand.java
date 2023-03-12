@@ -24,6 +24,7 @@ public class DefaultDriveCommand extends CommandBase {
   private DoubleSupplier translationSupplier;
   private DoubleSupplier strafeSupplier;
   private DoubleSupplier rotationSupplier;
+  private boolean isFieldCentric;
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
@@ -34,10 +35,12 @@ public class DefaultDriveCommand extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public DefaultDriveCommand(
-    DrivetrainSubsystem subsystem,
-    DoubleSupplier translationSupplier,
-    DoubleSupplier strafeSupplier,
-    DoubleSupplier rotationSupplier) {
+      DrivetrainSubsystem subsystem,
+      DoubleSupplier translationSupplier,
+      DoubleSupplier strafeSupplier,
+      DoubleSupplier rotationSupplier,
+      boolean isFieldCentric
+    ) {
 
     m_driveTrainSubSystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -46,6 +49,7 @@ public class DefaultDriveCommand extends CommandBase {
     this.translationSupplier = translationSupplier;
     this.strafeSupplier = strafeSupplier;
     this.rotationSupplier = rotationSupplier;
+    this.isFieldCentric = isFieldCentric;
   }
 
   // Called when the command is initially scheduled.
@@ -70,6 +74,7 @@ public class DefaultDriveCommand extends CommandBase {
     /* Drive */
     m_driveTrainSubSystem.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.maxSpeed),
-        rotationVal * Constants.maxAngularVelocity);
+        rotationVal * Constants.maxAngularVelocity,
+        isFieldCentric);
   }
 }
