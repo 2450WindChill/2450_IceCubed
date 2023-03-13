@@ -37,7 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
     // Otherwise move motors normally
     else {
-      ArmMotor.set(-xbox.getLeftX());
+      armMotor.set(-xbox.getLeftX());
     }
 }
 
