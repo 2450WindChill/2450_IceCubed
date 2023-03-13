@@ -24,8 +24,11 @@ public class MoveToPositionPID extends CommandBase {
 
   private double currentAngle;
 
-  private boolean movingUp;
+  private boolean movingForward;
   private boolean m_isRatcheting;
+
+  private boolean frontLimitSwitchVal;
+  private boolean backLimitSwitchVal;
 
   public MoveToPositionPID(ArmSubsystem subsystem, double targetPosition, boolean isRatcheting) {
     m_armSubsystem = subsystem;
@@ -52,10 +55,13 @@ public class MoveToPositionPID extends CommandBase {
     SmartDashboard.putNumber("Set Rotations", 0);
 
     if (m_targetPosition > currentAngle) {
-      movingUp = true;
+      movingForward = true;
     } else {
-      movingUp = false;
+      movingForward = false;
     }
+
+    frontLimitSwitchVal = m_armSubsystem.frontLimitSwitch.get();
+    backLimitSwitchVal = m_armSubsystem.backLimitSwitch.get();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -99,12 +105,23 @@ public class MoveToPositionPID extends CommandBase {
   @Override
   public boolean isFinished() {
     if (!m_isRatcheting) {
+      System.err.println("Returning false on non ratcheting pid command");
       return false;
     }
-    if (movingUp) {
-      return currentAngle >= (m_targetPosition - Constants.pidTolerance);
-    } else {
-      return currentAngle <= (m_targetPosition + Constants.pidTolerance);
+    if (movingForward) {
+      if (frontLimitSwitchVal){
+        m_armSubsystem.armMotor.set(0);
+        return true;
+      } else {
+        return (currentAngle >= (m_targetPosition - Constants.pidTolerance));
       }
+    } else {
+      if (backLimitSwitchVal){
+        m_armSubsystem.armMotor.set(0);
+        return true;
+      } else {
+        return (currentAngle <= (m_targetPosition + Constants.pidTolerance));
+      }
+    }
     }
 }

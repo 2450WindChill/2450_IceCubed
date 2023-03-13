@@ -21,7 +21,10 @@ public class MoveToPositionNoPID extends CommandBase {
   private double currentAngle;
   private double m_targetPosition;
 
-  private boolean movingUp;
+  private boolean movingForward;
+
+  private boolean frontLimitSwitchVal;
+  private boolean backLimitSwitchVal;
 
   /**
    * Creates a new ExampleCommand.
@@ -39,9 +42,9 @@ public class MoveToPositionNoPID extends CommandBase {
   @Override
   public void initialize() {
     if (m_targetPosition > currentAngle) {
-      movingUp = true;
+      movingForward = true;
     } else {
-      movingUp = false;
+      movingForward = false;
     }
   }
   
@@ -59,6 +62,9 @@ public class MoveToPositionNoPID extends CommandBase {
     SmartDashboard.putNumber("Target", m_targetPosition);
     SmartDashboard.putNumber("Current Angle", m_armSubsystem.armEncoder.getPosition());
     currentAngle = m_armSubsystem.armEncoder.getPosition();
+
+    frontLimitSwitchVal = m_armSubsystem.frontLimitSwitch.get();
+    backLimitSwitchVal = m_armSubsystem.backLimitSwitch.get();
   }
 
   // Called once the command ends or is interrupted.
@@ -72,11 +78,20 @@ public class MoveToPositionNoPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (movingUp) {
+    if (movingForward) {
+      if (frontLimitSwitchVal){
+        m_armSubsystem.armMotor.set(0);
+        return true;
+      } else {
         return (currentAngle >= (m_targetPosition - Constants.nonPidTolerance));
+      }
     } else {
+      if (backLimitSwitchVal){
+        m_armSubsystem.armMotor.set(0);
+        return true;
+      } else {
         return (currentAngle <= (m_targetPosition + Constants.nonPidTolerance));
-      
+      }
     }
   }
 }

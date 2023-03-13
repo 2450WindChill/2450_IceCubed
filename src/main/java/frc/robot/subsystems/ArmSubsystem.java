@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -28,6 +30,9 @@ public class ArmSubsystem extends SubsystemBase {
 
   public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushed);
   public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushed);
+
+  public final  DigitalInput frontLimitSwitch = new DigitalInput(0);
+  public final DigitalInput backLimitSwitch = new DigitalInput(1);
 
   // States
   public boolean doWeNeedToStopRumble = false;
@@ -96,7 +101,7 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
 
-    SmartDashboard.putNumber("Arrm",armMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Arm",armMotor.getEncoder().getPosition());
   }
 
   @Override

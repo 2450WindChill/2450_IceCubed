@@ -33,7 +33,7 @@ public class NonRatchetArmSequentialCommand extends SequentialCommandGroup {
       addCommands(
         new UnlockArmCommand(m_PneumaticsSubsystem),
         new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition),
-        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, true)
+        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, false)
       );
   }
     else {
