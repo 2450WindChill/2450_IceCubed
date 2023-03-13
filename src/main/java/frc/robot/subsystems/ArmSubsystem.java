@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -91,6 +93,10 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     UpdateState(RobotContainer.getOperatorController());
+    // This method will be called once per scheduler run
+    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+
+    SmartDashboard.putNumber("Arrm",armMotor.getEncoder().getPosition());
   }
 
   @Override

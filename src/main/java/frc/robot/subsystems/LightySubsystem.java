@@ -25,7 +25,7 @@ public class LightySubsystem extends SubsystemBase {
     // Reuse buffer
     // Default to a length of 60, start empty output
     // Length is expensive to set, so only set it once, then just update data
-    m_ledBuffer = new AddressableLEDBuffer(20);
+    m_ledBuffer = new AddressableLEDBuffer(300);
     m_led.setLength(m_ledBuffer.getLength());
 
     // Set the data
@@ -73,7 +73,7 @@ public class LightySubsystem extends SubsystemBase {
   public void SetLEDsToBlue(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 0, 150, 255);
+      m_ledBuffer.setRGB(i, 0, 50, 155);
    }
    
    m_led.setData(m_ledBuffer);
@@ -81,7 +81,7 @@ public class LightySubsystem extends SubsystemBase {
   public void SetLEDsToYellow(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 255, 175, 0);
+      m_ledBuffer.setRGB(i, 155, 75, 0);
    }
    
    m_led.setData(m_ledBuffer);
@@ -89,7 +89,7 @@ public class LightySubsystem extends SubsystemBase {
   public void SetLEDsToPurple(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 255,0 , 255);
+      m_ledBuffer.setRGB(i, 155,0 , 155);
    }
    
    m_led.setData(m_ledBuffer);
@@ -97,7 +97,7 @@ public class LightySubsystem extends SubsystemBase {
   public void SetLEDsToGreen(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 0,255 , 0);
+      m_ledBuffer.setRGB(i, 0,155 , 0);
    }
    
    m_led.setData(m_ledBuffer);
