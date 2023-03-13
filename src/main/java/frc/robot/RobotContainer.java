@@ -4,9 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
+import frc.robot.commands.ArmCommands.ActivateIntake;
+import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
+import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
@@ -15,15 +17,19 @@ import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
 import org.ejml.dense.row.MatrixFeatures_CDRM;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -43,11 +49,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
-  private final LightySubsystem m_LightySubsystem = new LightySubsystem();
-  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
+  // private final LightySubsystem m_LightySubsystem = new LightySubsystem();
+  // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -60,18 +65,25 @@ public class RobotContainer {
   public final JoystickButton m_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton m_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton m_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  // private final SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  // private final SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  // private final SlewRateLimiter rSlewRateLimiter = new SlewRateLimiter(30, -1000000, 0);
-  private final JoystickButton orientationButton = new JoystickButton(m_driverController, Button.kBack.value);
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+    // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+
+    m_drivetrainSubsystem.setDefaultCommand(
+        new DefaultDriveCommand(
+            m_drivetrainSubsystem,
+            () -> m_driverController.getLeftY(),
+            () -> m_driverController.getLeftX(),
+            () -> m_driverController.getRightX()
+          ));
+
     // Configure the trigger bindings
     configureBindings();
+    configureShuffleBoard();
   }
 
   /**
@@ -91,14 +103,26 @@ public class RobotContainer {
   private void configureBindings() {
     // m_aButton.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     // m_yButton.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+    // m_aButton.onTrue(new DriveDistanceX(m_drivetrainSubsystem, 1));
+    
+    // m_yButton.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    // m_xButton.onTrue(new LEDBlueCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    // m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    // m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
+    // (m_LightySubsystem))));
 
-    m_yButton.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_xButton.onTrue(new LEDBlueCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_aButton.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_bButton.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
-    (m_LightySubsystem))));
-    m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
-    m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+
+    // m_leftBumper.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
+    // m_rightBumper.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
+
+    // m_yButton.onTrue(new ActivateIntake(m_ArmSubsystem));
+    // m_xButton.onTrue(new Place(m_ArmSubsystem));
+  }
+
+  
+  private void configureShuffleBoard() {
+    ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    tab.add("Speed", 123);
   }
 
   public void resetGyro() {
