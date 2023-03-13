@@ -5,31 +5,18 @@
 package frc.robot;
 
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
-import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
 import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
 import frc.robot.commands.ArmCommands.RatchetArmSequentialCommand;
-import frc.robot.commands.ArmCommands.ActivateOuttake;
-import frc.robot.commands.ArmCommands.RotateArmCommand;
-import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
-import frc.robot.commands.LEDCommands.LEDYellowCommand;
-import frc.robot.commands.SolenoidCommands.LockArmCommand;
-import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
-import org.ejml.dense.row.MatrixFeatures_CDRM;
-
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -39,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -60,7 +46,7 @@ public class RobotContainer {
   // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   // private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -82,13 +68,13 @@ public class RobotContainer {
   public RobotContainer() {
     // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
 
-    m_drivetrainSubsystem.setDefaultCommand(
-        new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> m_driverController.getLeftY(),
-            () -> m_driverController.getLeftX(),
-            () -> m_driverController.getRightX()
-          ));
+    // m_drivetrainSubsystem.setDefaultCommand(
+    //     new DefaultDriveCommand(
+    //         m_drivetrainSubsystem,
+    //         () -> m_driverController.getLeftY(),
+    //         () -> m_driverController.getLeftX(),
+    //         () -> m_driverController.getRightX()
+    //       ));
 
     // Configure the trigger bindings
     configureBindings();
@@ -111,17 +97,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_leftBumper.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    m_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
-    (m_LightySubsystem))));
+    // m_leftBumper.onTrue(new LEDGreenCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    // m_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
+    // (m_LightySubsystem))));
 
-    m_aButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
-    m_bButton.whileTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
-    m_xButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
-    m_yButton.whileTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
+    m_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    m_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    m_xButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    m_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
-    // m_leftBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 0)).andThen(new MoveToPositionPID(m_ArmSubsystem, 0)));
-    // m_rightBumper.onTrue((new MoveToPositionNoPID(m_ArmSubsystem, 100)).andThen(new MoveToPositionPID(m_ArmSubsystem, 100)));
+    m_leftBumper.onTrue(new MoveToPositionNoPID(m_ArmSubsystem, 0));
+    m_rightBumper.onTrue(new MoveToPositionPID(m_ArmSubsystem, 100, false));
     // m_aButton.onTrue(new ExtendSolenoidCommand(m_PneumaticsSubsystem));
     // m_yButton.onTrue(new RetractSolenoidCommand(m_PneumaticsSubsystem));
     // m_aButton.onTrue(new DriveDistanceX(m_drivetrainSubsystem, 1));

@@ -39,10 +39,10 @@ public class ArmSubsystem extends SubsystemBase {
     Joystick_State,
   }
 
-  // public double manipulatorSpeed;
+  public double manipulatorSpeed;
 
   public ArmSubsystem() {
-    // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+     manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   public void UpdateState(XboxController xbox) {

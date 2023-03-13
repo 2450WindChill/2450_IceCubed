@@ -21,6 +21,8 @@ public class MoveToPositionNoPID extends CommandBase {
   private double currentAngle;
   private double m_targetPosition;
 
+  private boolean movingUp;
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -36,7 +38,11 @@ public class MoveToPositionNoPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    if (m_targetPosition > currentAngle) {
+      movingUp = true;
+    } else {
+      movingUp = false;
+    }
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,27 +64,18 @@ public class MoveToPositionNoPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.err.println("STOPPPPPINGGGGGGGGGGGGGGGGGGGGGGGGGGG: INterrupted? " + interrupted );
+    System.err.println("STOPPPPPINGGGGGGGGGGGGGGGGGGGGGGGGGGG: Interrupted? " + interrupted );
+    m_armSubsystem.armMotor.set(0);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_targetPosition > currentAngle) {
-        if (currentAngle >= (m_targetPosition - Constants.nonPidTolerance)) {
-          System.err.println("Stopped MovetoPosition NO PID");
-            return true;
-        } else {
-            return false;
-        }
+    if (movingUp) {
+        return (currentAngle >= (m_targetPosition - Constants.nonPidTolerance));
     } else {
-        if (currentAngle <= (m_targetPosition + Constants.nonPidTolerance)) {
-          System.err.println("Stopped MovetoPosition NO PID");
-            return true;
-        } else {
-            return false;
-        }
+        return (currentAngle <= (m_targetPosition + Constants.nonPidTolerance));
       
     }
   }
