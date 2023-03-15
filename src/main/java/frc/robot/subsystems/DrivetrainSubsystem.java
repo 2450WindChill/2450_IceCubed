@@ -79,6 +79,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
+  public void fieldCentricAutonomousDrive(double xSpeed, double ySpeed, double rotation) {
+    SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+          xSpeed,
+          ySpeed,
+          rotation,
+          getGyroAsRotation2d())
+      );
+
+    for (WindChillSwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+    }
+  }
+
   public Rotation2d getGyroAsRotation2d() {
     Rotation2d rotation2d = Rotation2d.fromDegrees(gyro.getYaw());
 
