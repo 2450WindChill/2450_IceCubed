@@ -37,8 +37,8 @@ public class Place extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.topManipulatorMotor.set(-m_subsystem.manipulatorSpeed);
-    m_subsystem.bottomManipulatorMotor.set(m_subsystem.manipulatorSpeed);
+    // m_subsystem.topManipulatorMotor.set(-m_subsystem.manipulatorSpeed);
+    // m_subsystem.bottomManipulatorMotor.set(m_subsystem.manipulatorSpeed);
   }
 
   // Called once the command ends or is interrupted.

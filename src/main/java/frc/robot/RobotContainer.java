@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
+import frc.robot.commands.ArmCommands.DefaultArmCommand;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
 import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
@@ -16,7 +17,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -66,7 +67,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+    CameraServer.startAutomaticCapture();
+    m_ArmSubsystem.setDefaultCommand(new DefaultArmCommand(m_ArmSubsystem));
 
     // m_drivetrainSubsystem.setDefaultCommand(
     //     new DefaultDriveCommand(

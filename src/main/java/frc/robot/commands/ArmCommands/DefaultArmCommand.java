@@ -16,10 +16,10 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-public class RotateArmCommand extends CommandBase {
+public class DefaultArmCommand extends CommandBase {
   private final ArmSubsystem m_subsystem;
 
-    public RotateArmCommand(ArmSubsystem armSubsystem) {
+    public DefaultArmCommand(ArmSubsystem armSubsystem) {
       m_subsystem = armSubsystem;
     
       addRequirements(armSubsystem);

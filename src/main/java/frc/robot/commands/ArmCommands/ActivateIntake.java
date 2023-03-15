@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public class ActivateIntake extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ArmSubsystem m_subsystem;
+  private double manipulatorIntakeSpeed;
 
   /**
    * Creates a new ExampleCommand.
@@ -38,8 +39,8 @@ public class ActivateIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.topManipulatorMotor.set(Constants.manipulatorIntakeSpeed);
-    m_subsystem.bottomManipulatorMotor.set(-Constants.manipulatorIntakeSpeed);
+    m_subsystem.topManipulatorMotor.set(manipulatorIntakeSpeed);
+    m_subsystem.bottomManipulatorMotor.set(manipulatorIntakeSpeed);
   }
 
   // Called once the command ends or is interrupted.

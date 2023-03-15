@@ -44,10 +44,10 @@ public class ArmSubsystem extends SubsystemBase {
     Joystick_State,
   }
 
-  public double manipulatorSpeed;
+  // public double manipulatorSpeed;
 
   public ArmSubsystem() {
-     manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+     // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
   }
 
   public void UpdateState(XboxController xbox) {
@@ -76,6 +76,14 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void ManualInputs(XboxController xbox) {
+    double manipulatorSpeed = 0;
+
+    manipulatorSpeed = (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis())/2;
+    topManipulatorMotor.set(manipulatorSpeed);
+    bottomManipulatorMotor.set(-manipulatorSpeed);
+    
+    System.err.println("Setting manipulator speed to: " + manipulatorSpeed);
+
     if (state == State.Joystick_State) {
       // Joystick drift protection
       if ((xbox.getLeftX() < .15) && (xbox.getLeftX() > -0.15)) {
@@ -93,13 +101,14 @@ public class ArmSubsystem extends SubsystemBase {
       return;
     }
 
+    
   }
 
   @Override
   public void periodic() {
     UpdateState(RobotContainer.getOperatorController());
     // This method will be called once per scheduler run
-    manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
+    // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
 
     SmartDashboard.putNumber("Arm",armMotor.getEncoder().getPosition());
   }
