@@ -18,6 +18,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -67,7 +68,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    CameraServer.startAutomaticCapture();
+    
+
     m_ArmSubsystem.setDefaultCommand(new DefaultArmCommand(m_ArmSubsystem));
 
     // m_drivetrainSubsystem.setDefaultCommand(
@@ -81,6 +83,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     configureShuffleBoard();
+    configureCamera();
   }
 
   /**
@@ -132,6 +135,12 @@ public class RobotContainer {
   private void configureShuffleBoard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
     tab.add("Speed", 123);
+  }
+
+  private void configureCamera() {
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(320, 240);
+    camera.setFPS(10);
   }
 
   public void resetGyro() {
