@@ -26,10 +26,12 @@ public class NonRatchetArmSequentialCommand extends SequentialCommandGroup {
     addRequirements(ArmSubsystem, PneumaticsSubsystem);
 
     if (ArmSubsystem.state == State.Joystick_State) {
+      System.err.println("Not running command");
       return;
     }
 
     else if (ArmSubsystem.state == State.Button_State) {
+      System.err.println("Running command");
       addCommands(
         new UnlockArmCommand(m_PneumaticsSubsystem),
         new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition),
@@ -37,6 +39,7 @@ public class NonRatchetArmSequentialCommand extends SequentialCommandGroup {
       );
   }
     else {
+      System.err.println("Garrett is watching me type this (else)");
       return;
     }
 }

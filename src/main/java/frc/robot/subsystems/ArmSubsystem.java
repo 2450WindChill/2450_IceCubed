@@ -77,12 +77,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void ManualInputs(XboxController xbox) {
     double manipulatorSpeed = 0;
+    boolean goingForward = xbox.getLeftX() > 0;
 
     manipulatorSpeed = (xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis())/2;
     topManipulatorMotor.set(manipulatorSpeed);
     bottomManipulatorMotor.set(-manipulatorSpeed);
     
-    System.err.println("Setting manipulator speed to: " + manipulatorSpeed);
+    // System.err.println("Setting manipulator speed to: " + manipulatorSpeed);
 
     if (state == State.Joystick_State) {
       // Joystick drift protection
@@ -91,7 +92,12 @@ public class ArmSubsystem extends SubsystemBase {
       }
       // Otherwise move motors normally
       else {
-        armMotor.set(-xbox.getLeftX() / 8);
+        if ((frontLimitSwitch.get() && goingForward) || (backLimitSwitch.get() && !goingForward)) {
+          System.err.println("Limit switch hit");
+          armMotor.set(0);
+        } else {
+          armMotor.set(xbox.getLeftX() / 8);
+        }
       }
 
     }
@@ -111,6 +117,8 @@ public class ArmSubsystem extends SubsystemBase {
     // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
 
     SmartDashboard.putNumber("Arm",armMotor.getEncoder().getPosition());
+    SmartDashboard.getBoolean("Front Limit Switch", frontLimitSwitch.get());
+    SmartDashboard.getBoolean("Back Limit Switch", backLimitSwitch.get());
   }
 
   @Override

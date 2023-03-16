@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -104,24 +105,28 @@ public class MoveToPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_armSubsystem.state == ArmSubsystem.State.Joystick_State) {
+      System.err.println("Joystick state ended this thing");
+      return true;
+    }
     if (!m_isRatcheting) {
       System.err.println("Returning false on non ratcheting pid command");
       return false;
     }
     if (movingForward) {
-      if (frontLimitSwitchVal){
+      if (frontLimitSwitchVal) {
         m_armSubsystem.armMotor.set(0);
         return true;
       } else {
         return (currentAngle >= (m_targetPosition - Constants.pidTolerance));
       }
     } else {
-      if (backLimitSwitchVal){
+      if (backLimitSwitchVal) {
         m_armSubsystem.armMotor.set(0);
         return true;
       } else {
         return (currentAngle <= (m_targetPosition + Constants.pidTolerance));
       }
     }
-    }
+  }
 }
