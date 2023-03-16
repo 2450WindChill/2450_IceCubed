@@ -78,7 +78,8 @@ public class RobotContainer {
             m_drivetrainSubsystem,
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
-            () -> m_driverController.getRightX()
+            () -> m_driverController.getRightX(),
+            () -> m_rightBumper.getAsBoolean()
           ));
 
     // Configure the trigger bindings
