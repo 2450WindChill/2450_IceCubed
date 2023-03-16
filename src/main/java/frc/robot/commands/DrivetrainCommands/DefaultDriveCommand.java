@@ -10,6 +10,7 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,7 +25,7 @@ public class DefaultDriveCommand extends CommandBase {
   private DoubleSupplier translationSupplier;
   private DoubleSupplier strafeSupplier;
   private DoubleSupplier rotationSupplier;
-  private boolean isFieldCentric;
+  private BooleanSupplier isRobotCentricSupplier;
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
@@ -39,7 +40,7 @@ public class DefaultDriveCommand extends CommandBase {
       DoubleSupplier translationSupplier,
       DoubleSupplier strafeSupplier,
       DoubleSupplier rotationSupplier,
-      boolean isFieldCentric
+      BooleanSupplier isRobotCentricSupplier
     ) {
 
     m_driveTrainSubSystem = subsystem;
@@ -49,7 +50,7 @@ public class DefaultDriveCommand extends CommandBase {
     this.translationSupplier = translationSupplier;
     this.strafeSupplier = strafeSupplier;
     this.rotationSupplier = rotationSupplier;
-    this.isFieldCentric = isFieldCentric;
+    this.isRobotCentricSupplier = isRobotCentricSupplier;
   }
 
   // Called when the command is initially scheduled.
@@ -75,6 +76,6 @@ public class DefaultDriveCommand extends CommandBase {
     m_driveTrainSubSystem.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.maxSpeed),
         rotationVal * Constants.maxAngularVelocity,
-        isFieldCentric);
+        isRobotCentricSupplier.getAsBoolean());
   }
 }

@@ -47,20 +47,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
-  public void drive(Translation2d translation, double rotation, boolean isFieldCentric) {
+  public void drive(Translation2d translation, double rotation, boolean isRobotCentric) {
     SwerveModuleState[] swerveModuleStates;
 
-    if (isFieldCentric) {
+    if (isRobotCentric) {
+      swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+        new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
+      );
+    } else {
       swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
         ChassisSpeeds.fromFieldRelativeSpeeds(
           translation.getX(), 
           translation.getY(), 
           rotation, 
-          getGyroAsRotation2d()
-      ));
-    } else {
-      swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
+          getGyroAsRotation2d())
       );
     }
 
