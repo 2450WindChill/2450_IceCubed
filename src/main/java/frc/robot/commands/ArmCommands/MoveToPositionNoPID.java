@@ -79,19 +79,19 @@ public class MoveToPositionNoPID extends CommandBase {
   @Override
   public boolean isFinished() {
     if (movingForward) {
-      if (frontLimitSwitchVal){
-        m_armSubsystem.armMotor.set(0);
-        return true;
-      } else {
+      // if (frontLimitSwitchVal){
+      //   m_armSubsystem.armMotor.set(0);
+      //   return true;
+      // } else {
         return (currentAngle >= (m_targetPosition - Constants.nonPidTolerance));
       }
-    } else {
-      if (backLimitSwitchVal){
-        m_armSubsystem.armMotor.set(0);
-        return true;
-      } else {
+    // } else {
+    //   if (backLimitSwitchVal){
+    //     m_armSubsystem.armMotor.set(0);
+    //     return true;
+    //   } else {
         return (currentAngle <= (m_targetPosition + Constants.nonPidTolerance));
       }
     }
-  }
-}
+  // }
+// }

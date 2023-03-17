@@ -33,10 +33,10 @@ public class RatchetArmSequentialCommand extends SequentialCommandGroup {
     else if (ArmSubsystem.state == State.Button_State) {
       System.err.println("Running command");
       addCommands(
-        new UnlockArmCommand(m_PneumaticsSubsystem),
-        new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition),
-        new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, true),
-        new LockArmCommand(m_PneumaticsSubsystem)
+        // new UnlockArmCommand(m_PneumaticsSubsystem),
+        new MoveToPositionNoPID(m_ArmSubsystem, m_targetPosition)// ,
+        // new MoveToPositionPID(m_ArmSubsystem, m_targetPosition, true),
+        // new LockArmCommand(m_PneumaticsSubsystem)
       );
   }
     else {

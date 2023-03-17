@@ -160,12 +160,12 @@ public final class Constants {
   public static double nonPidTolerance = 5;
 
   // Held by PID
-  public static double frontIntakeAngle = 0;
-  public static double singleSubstationAngle = 50;
+  public static double frontIntakeAngle = -20;
+  public static double singleSubstationAngle = -56.19;
 
   // Held by ratchet
-  public static double midRowPlacingAngle = 100;
-  public static double backIntake = 150;
+  public static double midRowPlacingAngle = -230.98;
+  public static double backIntake = -260;
 
   public static double manipulatorIntakeSpeed = 0.5;
   public static double manipulatorOuttakeSpeed = 0.5;
