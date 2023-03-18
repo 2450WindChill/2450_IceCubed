@@ -12,6 +12,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceX extends CommandBase {
@@ -27,8 +28,8 @@ public class DriveDistanceX extends CommandBase {
    */
   public DriveDistanceX(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet) {
     m_driveSubsystem = drivetrainSubsystem;
-    currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal();
-    targetLocationFeet = desiredDistanceFeet - currentLocationFeet;
+    currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal() / Constants.rotationsPerOneFoot;
+    targetLocationFeet = desiredDistanceFeet + currentLocationFeet;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSubsystem);
   }
@@ -44,6 +45,9 @@ public class DriveDistanceX extends CommandBase {
   public void execute() {
     double currentLocationRotations = m_driveSubsystem.getFrontLeftEncoderVal();
     currentLocationFeet = currentLocationRotations / Constants.rotationsPerOneFoot;
+
+    SmartDashboard.putNumber("Target Location", targetLocationFeet);
+    SmartDashboard.putNumber("Current Location", currentLocationFeet);
 
   }
 

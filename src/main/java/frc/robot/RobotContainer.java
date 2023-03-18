@@ -137,7 +137,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new InstantCommand();
+    return new DriveDistanceX(m_drivetrainSubsystem, 1);
   }
 
   public static XboxController getClimbController() {
