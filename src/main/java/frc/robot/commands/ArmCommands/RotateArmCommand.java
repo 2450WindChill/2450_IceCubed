@@ -27,7 +27,7 @@ public class RotateArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-      m_subsystem.ManualInputs(RobotContainer.getClimbController());
+      m_subsystem.ManualInputs(RobotContainer.getDriveController());
     }
 
         
