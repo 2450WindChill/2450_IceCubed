@@ -130,10 +130,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
       // SmartDashboard.putNumber("Average Encoder Value", getAverageEncoderVal());
     }
 
+  
+
     swerveOdometry.update(
       getGyroAsRotation2d(),
       getModulePositions()
     );
+    SmartDashboard.putNumber("Gyro", gyro.getYaw());
   }
 
   @Override
