@@ -21,7 +21,7 @@ import frc.robot.Constants;
 import frc.robot.WindChillSwerveModule;
 
 public class DrivetrainSubsystem extends SubsystemBase {
-  private final Pigeon2 gyro;
+  public final Pigeon2 gyro;
   private WindChillSwerveModule[] swerveModules;
   public SwerveDriveOdometry swerveOdometry;
 
@@ -69,29 +69,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
-  public void autonomousDrive(double xSpeed, double ySpeed, double rotation) {
-    SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(xSpeed, ySpeed, rotation)
-      );
+  // public void autonomousDrive(double xSpeed, double ySpeed, double rotation) {
+  //   SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+  //       new ChassisSpeeds(xSpeed, ySpeed, rotation)
+  //     );
 
-    for (WindChillSwerveModule mod : swerveModules) {
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
-    }
-  }
+  //   for (WindChillSwerveModule mod : swerveModules) {
+  //     mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+  //   }
+  // }
 
-  public void fieldCentricAutonomousDrive(double xSpeed, double ySpeed, double rotation) {
-    SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-          xSpeed,
-          ySpeed,
-          rotation,
-          getGyroAsRotation2d())
-      );
+  // public void fieldCentricAutonomousDrive(double xSpeed, double ySpeed, double rotation) {
+  //   SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
+  //       ChassisSpeeds.fromFieldRelativeSpeeds(
+  //         xSpeed,
+  //         ySpeed,
+  //         rotation,
+  //         getGyroAsRotation2d())
+  //     );
 
-    for (WindChillSwerveModule mod : swerveModules) {
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
-    }
-  }
+  //   for (WindChillSwerveModule mod : swerveModules) {
+  //     mod.setDesiredState(swerveModuleStates[mod.moduleNumber]);
+  //   }
+  // }
 
   public Rotation2d getGyroAsRotation2d() {
     Rotation2d rotation2d = Rotation2d.fromDegrees(gyro.getYaw());

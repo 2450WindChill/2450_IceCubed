@@ -10,8 +10,10 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** An example command that uses an example subsystem. */
 public class FieldCentricAutoDrive extends CommandBase {
@@ -28,7 +30,7 @@ public class FieldCentricAutoDrive extends CommandBase {
   public FieldCentricAutoDrive(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet) {
     m_driveSubsystem = drivetrainSubsystem;
     currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal();
-    targetLocationFeet = desiredDistanceFeet - currentLocationFeet;
+    targetLocationFeet = desiredDistanceFeet + currentLocationFeet;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSubsystem);
   }
@@ -36,21 +38,23 @@ public class FieldCentricAutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveSubsystem.fieldCentricAutonomousDrive(-0.3, 0, 0);
+    m_driveSubsystem.drive(new Translation2d(-2, 0), 0, false);
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double currentLocationRotations = m_driveSubsystem.getFrontLeftEncoderVal();
-    currentLocationFeet = currentLocationRotations / Constants.rotationsPerOneFoot;
+    currentLocationFeet = Math.abs(currentLocationRotations / Constants.rotationsPerOneFoot);
 
+    SmartDashboard.putNumber("Target Location", targetLocationFeet);
+    SmartDashboard.putNumber("Current Location", currentLocationFeet);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_driveSubsystem.autonomousDrive(0, 0, 0);
+    m_driveSubsystem.drive(new Translation2d(0, 0), m_driveSubsystem.gyro.getYaw(), false);
   }
 
   // Returns true when the command should end.

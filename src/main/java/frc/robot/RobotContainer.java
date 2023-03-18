@@ -8,6 +8,7 @@ import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
+import frc.robot.commands.AutonomousCommands.AutonomousCommand;
 import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
@@ -131,7 +132,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveDistanceX(m_drivetrainSubsystem, 1);
+    return new AutonomousCommand(this, m_drivetrainSubsystem);
   }
 
   public static XboxController getDriveController() {
