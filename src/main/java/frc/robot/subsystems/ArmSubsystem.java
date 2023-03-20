@@ -5,14 +5,17 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -26,11 +29,11 @@ import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public final CANSparkMax armMotor = new CANSparkMax(17, MotorType.kBrushless);
-  public final RelativeEncoder armEncoder = armMotor.getEncoder();
+  public final CANSparkMax armMotor = new CANSparkMax(14, MotorType.kBrushless);
+  public final AbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
-  public final CANSparkMax topManipulatorMotor = new CANSparkMax(18, MotorType.kBrushed);
-  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(19, MotorType.kBrushed);
+  public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushed);
+  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushed);
 
   public final DigitalInput frontLimitSwitch = new DigitalInput(8);
   public final DigitalInput backLimitSwitch = new DigitalInput(9);
