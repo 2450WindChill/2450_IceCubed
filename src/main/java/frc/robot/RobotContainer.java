@@ -8,7 +8,8 @@ import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.ActivateIntake;
 import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
-import frc.robot.commands.AutonomousCommands.AutonomousCommand;
+import frc.robot.commands.AutonomousCommands.NonCenteredAuto;
+import frc.robot.commands.AutonomousCommands.CenteredAuto;
 import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
@@ -22,6 +23,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import org.ejml.dense.row.MatrixFeatures_CDRM;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -31,6 +34,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -51,12 +56,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
+  // private final PneumaticsSubsystem m_PneumaticsSubsystem = new
+  // PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-
-
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -70,7 +74,10 @@ public class RobotContainer {
   public final JoystickButton op_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton op_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  
+
+  public Command centered;
+  public Command nonCentered;
+  public SendableChooser<Command> m_chooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,12 +91,11 @@ public class RobotContainer {
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
             () -> m_driverController.getRightX(),
-            () -> op_rightBumper.getAsBoolean()
-          ));
+            () -> op_rightBumper.getAsBoolean()));
 
-    // Configure the trigger bindings
     configureBindings();
     configureShuffleBoard();
+    configureAutoChooser();
   }
 
   /**
@@ -107,22 +113,34 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
-    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
-    (m_LightySubsystem))));
+
+    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
 
     drive_aButton.onTrue(Commands.runOnce(() -> resetGyro()));
 
   }
 
-  
   private void configureShuffleBoard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
   }
 
   public void resetGyro() {
     m_drivetrainSubsystem.zeroGyro();
+  }
+
+  public void configureAutoChooser() {
+    centered = new CenteredAuto(this, m_drivetrainSubsystem);
+    nonCentered = new NonCenteredAuto(this, m_drivetrainSubsystem);
+
+    m_chooser = new SendableChooser<>();
+
+    m_chooser.setDefaultOption("Non Centered", nonCentered);
+    m_chooser.addOption("Centered:", centered);
+
+    SmartDashboard.putData(m_chooser);
   }
 
   /**
@@ -132,7 +150,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new AutonomousCommand(this, m_drivetrainSubsystem);
+    return m_chooser.getSelected();
   }
 
   public static XboxController getDriveController() {
@@ -142,4 +160,5 @@ public class RobotContainer {
   public static XboxController getOperatorController() {
     return m_operatorController;
   }
+
 }

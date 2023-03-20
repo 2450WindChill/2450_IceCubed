@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class AutonomousCommand extends SequentialCommandGroup {
+public class CenteredAuto extends SequentialCommandGroup {
   public DrivetrainSubsystem m_driveTrainSub;
-  public AutonomousCommand(RobotContainer robotContainer, DrivetrainSubsystem subsystem) {
+  public CenteredAuto(RobotContainer robotContainer, DrivetrainSubsystem subsystem) {
     m_driveTrainSub = subsystem;
     addRequirements(m_driveTrainSub);
 
     addCommands(
-        new FieldCentricAutoDrive(m_driveTrainSub, 15.0)
+        new DriveDistanceX(m_driveTrainSub, 15.0)
       );
   }
 }
