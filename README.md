@@ -1,14 +1,16 @@
-# 2450_Timmy
- Wind Chill 2450s 2023 Charged Up Code FRC
+# 2450_IceCubed
+ Wind Chill 2450's 2023 Charged Up Code (FRC)
+
+## Robot components:
+* Swerve Drive
+* Rotating arm
+* Pneumatic rock ratcheting system
+* Vision (limelight  3)
+* Intake mechanism
+* FPV camera
+* LEDs
+
+## Motor controllers:
+ The robot uses Rev Spark Max motor controllers with NEO brushless motors. 
 
 
-To-do:
-
-CHECK TODO!!
-
-1. Add odometry
-2. Add field to dashboard
-3. Add field to drive function
-4. Add setModuleStates to the subsystem to use in auto
-5. Figure out feedfoward
-6. Finish setspeed
