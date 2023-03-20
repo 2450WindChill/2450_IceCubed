@@ -22,14 +22,21 @@ public class FieldCentricAutoDrive extends CommandBase {
   private double currentLocationFeet = 0;
   private double targetLocationFeet = 0;
 
+  private Translation2d m_speeds;
+  private double m_rotation;
+
+  private boolean movingForward;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public FieldCentricAutoDrive(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet) {
+  public FieldCentricAutoDrive(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet, Translation2d speeds, double rotation) {
     m_driveSubsystem = drivetrainSubsystem;
-    currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal();
+    m_speeds = speeds;
+    m_rotation = rotation;
+
     targetLocationFeet = desiredDistanceFeet + currentLocationFeet;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSubsystem);
@@ -38,7 +45,13 @@ public class FieldCentricAutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveSubsystem.drive(new Translation2d(-2, 0), 0, false);
+    m_driveSubsystem.drive(m_speeds, m_rotation, false);
+
+    if (currentLocationFeet < targetLocationFeet) {
+      movingForward = true;
+    } else {
+      movingForward = false;
+    }
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,6 +62,8 @@ public class FieldCentricAutoDrive extends CommandBase {
 
     SmartDashboard.putNumber("Target Location", targetLocationFeet);
     SmartDashboard.putNumber("Current Location", currentLocationFeet);
+
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -60,10 +75,10 @@ public class FieldCentricAutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (currentLocationFeet >= targetLocationFeet){
-      return true;
+    if (movingForward){
+      return currentLocationFeet >= targetLocationFeet;
     } else {
-      return false;
+      return currentLocationFeet <= targetLocationFeet;
     }
   }
 }

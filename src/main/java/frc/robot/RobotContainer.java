@@ -10,7 +10,6 @@ import frc.robot.commands.ArmCommands.Place;
 import frc.robot.commands.ArmCommands.RotateArmCommand;
 import frc.robot.commands.AutonomousCommands.NonCenteredAuto;
 import frc.robot.commands.AutonomousCommands.CenteredAuto;
-import frc.robot.commands.AutonomousCommands.DriveDistanceX;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
