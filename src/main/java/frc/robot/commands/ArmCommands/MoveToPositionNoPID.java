@@ -52,10 +52,12 @@ public class MoveToPositionNoPID extends CommandBase {
   @Override
   public void execute() {
    
-    if (m_targetPosition > currentAngle){
-        m_armSubsystem.armMotor.set(0.3);
+    if (movingForward == true){
+      System.err.println("Moving foward");
+        m_armSubsystem.armMotor.set(0.4);
     } else {
-        m_armSubsystem.armMotor.set(-0.3);
+      System.err.println("Moving back");
+        m_armSubsystem.armMotor.set(-0.4);
     }
     
     System.err.println("MovetoPosition NO PID");
@@ -83,6 +85,7 @@ public class MoveToPositionNoPID extends CommandBase {
       //   m_armSubsystem.armMotor.set(0);
       //   return true;
       // } else {
+        System.err.println(" FOWARD: Target pos:  " + m_targetPosition + " Current angle: " + currentAngle);
         return (currentAngle >= (m_targetPosition - Constants.nonPidTolerance));
       }
     // } else {
@@ -90,6 +93,7 @@ public class MoveToPositionNoPID extends CommandBase {
     //     m_armSubsystem.armMotor.set(0);
     //     return true;
     //   } else {
+      System.err.println("BACK: Target pos:  " + m_targetPosition + " Current angle: " + currentAngle);
         return (currentAngle <= (m_targetPosition + Constants.nonPidTolerance));
       }
     }
