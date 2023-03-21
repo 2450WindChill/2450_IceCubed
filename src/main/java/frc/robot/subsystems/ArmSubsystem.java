@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -29,11 +30,12 @@ import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public final CANSparkMax armMotor = new CANSparkMax(14, MotorType.kBrushless);
-  public final AbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
+  public final CANSparkMax armMotor = new CANSparkMax(17, MotorType.kBrushless);
+  //public final AbsoluteEncoder armEncoder = (AbsoluteEncoder) armMotor.get(8192)
+  //public final RelativeEncoder armEncoder = armMotor.getEncoder();
 
-  public final CANSparkMax topManipulatorMotor = new CANSparkMax(15, MotorType.kBrushed);
-  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(16, MotorType.kBrushed);
+  public final CANSparkMax topManipulatorMotor = new CANSparkMax(18, MotorType.kBrushless);
+  public final CANSparkMax bottomManipulatorMotor = new CANSparkMax(19, MotorType.kBrushless);
 
   public final DigitalInput frontLimitSwitch = new DigitalInput(8);
   public final DigitalInput backLimitSwitch = new DigitalInput(9);
@@ -53,6 +55,7 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
      // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
      armMotor.setIdleMode(IdleMode.kBrake);
+     
      //armEncoder.
   }
 
@@ -91,7 +94,7 @@ public class ArmSubsystem extends SubsystemBase {
     
     // System.err.println("Setting manipulator speed to: " + manipulatorSpeed);
 
-    if (state == State.Joystick_State) {
+    // if (state == State.Joystick_State) {
       // Joystick drift protection
       if ((xbox.getLeftX() < .15) && (xbox.getLeftX() > -0.15)) {
         armMotor.set(0);
@@ -108,13 +111,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
-    else if (state == State.Button_State) {
+    // else if (state == State.Button_State) {
       // Don't care about xbox inputs, just pay attention to buttons
-      return;
-    }
+      // return;
+    // }
 
     
-  }
+  //}
 
   @Override
   public void periodic() {
@@ -123,9 +126,10 @@ public class ArmSubsystem extends SubsystemBase {
     // manipulatorSpeed = SmartDashboard.getNumber("Manipulator Speed", 0.1);
     SmartDashboard.putBoolean("frontLimitSwitch", frontLimitSwitch.get());
     SmartDashboard.putBoolean("backLimitSwitch", backLimitSwitch.get());
-    SmartDashboard.putNumber("Arm",armMotor.getEncoder().getPosition());
+    SmartDashboard.getNumber("Arm encoder", armEncoder.getPosition());
     SmartDashboard.getBoolean("Front Limit Switch", frontLimitSwitch.get());
     SmartDashboard.getBoolean("Back Limit Switch", backLimitSwitch.get());
+    System.err.println("Arm encoder: " + armEncoder.getPosition());
   }
 
   @Override
