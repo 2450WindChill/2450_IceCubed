@@ -15,8 +15,8 @@ import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
 import frc.robot.commands.LEDCommands.LEDYellowCommand;
 import frc.robot.commands.LimelightCommands.LightAim;
-import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
-import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
+import frc.robot.commands.SolenoidCommands.LockArmCommand;
+import frc.robot.commands.SolenoidCommands.UnlockArmCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
@@ -50,7 +50,8 @@ public class RobotContainer {
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final LimelightSubsystem m_LimelightSubsystem = new LimelightSubsystem();
 
 
 
@@ -60,8 +61,11 @@ public class RobotContainer {
 
   static XboxController m_driverController = new XboxController(0);
   static XboxController m_operatorController = new XboxController(1);
+
   public final JoystickButton drive_aButton = new JoystickButton(m_driverController, Button.kA.value);
   public final JoystickButton drive_bButton = new JoystickButton(m_driverController, Button.kB.value);
+  public final JoystickButton drive_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
+  public final JoystickButton drive_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
 
   public final JoystickButton op_aButton = new JoystickButton(m_driverController, Button.kA.value);
   public final JoystickButton op_yButton = new JoystickButton(m_driverController, Button.kY.value);
@@ -70,14 +74,6 @@ public class RobotContainer {
   public final JoystickButton op_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
   
-  public final JoystickButton m_aButton = new JoystickButton(m_operatorController, Button.kA.value);
-  public final JoystickButton m_yButton = new JoystickButton(m_operatorController, Button.kY.value);
-  public final JoystickButton m_bButton = new JoystickButton(m_operatorController, Button.kB.value);
-  public final JoystickButton m_xButton = new JoystickButton(m_operatorController, Button.kX.value);
-  
-  public final JoystickButton m_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
-  public final JoystickButton m_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -86,14 +82,14 @@ public class RobotContainer {
 
     m_ArmSubsystem.setDefaultCommand(new DefaultArmCommand(m_ArmSubsystem));
 
-    // m_drivetrainSubsystem.setDefaultCommand(
-    //     new DefaultDriveCommand(
-    //         m_drivetrainSubsystem,
-    //         () -> m_driverController.getLeftY(),
-    //         () -> m_driverController.getLeftX(),
-    //         () -> m_driverController.getRightX(),
-    //         () -> op_rightBumper.getAsBoolean()
-    //       ));
+    m_drivetrainSubsystem.setDefaultCommand(
+        new DefaultDriveCommand(
+            m_drivetrainSubsystem,
+            () -> m_driverController.getLeftY(),
+            () -> m_driverController.getLeftX(),
+            () -> m_driverController.getRightX(),
+            () -> drive_rightBumper.getAsBoolean()
+          ));
 
     // Configure the trigger bindings
     configureBindings();
@@ -121,10 +117,10 @@ public class RobotContainer {
     op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
-    m_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
-    m_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
-    m_xButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
-    m_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
+    op_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    op_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    op_xButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
     drive_aButton.onTrue(Commands.runOnce(() -> resetGyro()));
     drive_bButton.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem));
@@ -144,7 +140,7 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    // m_drivetrainSubsystem.zeroGyro();
+    m_drivetrainSubsystem.zeroGyro();
   }
 
   /**
