@@ -85,41 +85,42 @@ public class LightySubsystem extends SubsystemBase {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       m_ledBuffer.setRGB(i, 0, 50, 155);
-      // m_ledBuffer2.setRGB(i, 0, 50, 155);
    }
    
    m_led.setData(m_ledBuffer);
-   // m_led2.setData(m_ledBuffer2);
   }
   public void SetLEDsToYellow(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       m_ledBuffer.setRGB(i, 155, 75, 0);
-      // m_ledBuffer2.setRGB(i, 155, 75, 0);
    }
    
    m_led.setData(m_ledBuffer);
-   // m_led2.setData(m_ledBuffer2);
   }
   public void SetLEDsToPurple(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       m_ledBuffer.setRGB(i, 155,0 , 155);
-      // m_ledBuffer2.setRGB(i, 155,0 , 155);
    }
    
    m_led.setData(m_ledBuffer);
-   // m_led2.setData(m_ledBuffer2);
   }
   public void SetLEDsToGreen(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       m_ledBuffer.setRGB(i, 0,155 , 0);
-      // m_ledBuffer2.setRGB(i, 0,155 , 0);
    }
    
    m_led.setData(m_ledBuffer);
-   // m_led2.setData(m_ledBuffer2);
+  }
+
+  public void SetLEDsToRed(){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 155,0 , 0);
+   }
+   
+   m_led.setData(m_ledBuffer);
   }
 
 }
