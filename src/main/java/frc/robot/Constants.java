@@ -157,4 +157,22 @@ public final class Constants {
     public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
         canCoderID, angleOffset);
   }
+
+  public static double pidTolerance = 1;
+  public static double nonPidTolerance = 5;
+
+  // Held by PID
+  public static double frontIntakeAngle = -20;
+  public static double singleSubstationAngle = -56.19;
+
+  // Held by ratchet
+  public static double midRowPlacingAngle = -230.98;
+  public static double backIntake = -260;
+
+  public static double manipulatorIntakeSpeed = 0.5;
+  public static double manipulatorOuttakeSpeed = 0.5;
+
+  // States
+  public static int POV_right_dpad = 90;
+  public static int POV_left_dpad = 270;
 }

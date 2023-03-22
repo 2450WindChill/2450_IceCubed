@@ -5,10 +5,11 @@
 package frc.robot;
 
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
-import frc.robot.commands.ArmCommands.ActivateIntake;
-import frc.robot.commands.ArmCommands.Place;
-import frc.robot.commands.ArmCommands.RotateArmCommand;
-import frc.robot.commands.AutonomousCommands.DriveDistanceX;
+import frc.robot.commands.ArmCommands.DefaultArmCommand;
+import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
+import frc.robot.commands.ArmCommands.MoveToPositionPID;
+import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
+import frc.robot.commands.ArmCommands.RatchetArmSequentialCommand;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
@@ -18,16 +19,11 @@ import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
-
-import org.ejml.dense.row.MatrixFeatures_CDRM;
-
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -38,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -52,11 +47,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
+  private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
-  private final LimelightSubsystem m_LimelightSubsystem = new LimelightSubsystem();
-  // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
+
 
 
 
@@ -74,12 +70,21 @@ public class RobotContainer {
   public final JoystickButton op_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
   
+  public final JoystickButton m_aButton = new JoystickButton(m_operatorController, Button.kA.value);
+  public final JoystickButton m_yButton = new JoystickButton(m_operatorController, Button.kY.value);
+  public final JoystickButton m_bButton = new JoystickButton(m_operatorController, Button.kB.value);
+  public final JoystickButton m_xButton = new JoystickButton(m_operatorController, Button.kX.value);
+  
+  public final JoystickButton m_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
+  public final JoystickButton m_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
+    
+
+    m_ArmSubsystem.setDefaultCommand(new DefaultArmCommand(m_ArmSubsystem));
 
     // m_drivetrainSubsystem.setDefaultCommand(
     //     new DefaultDriveCommand(
@@ -93,6 +98,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     configureShuffleBoard();
+    configureCamera();
   }
 
   /**
@@ -115,14 +121,26 @@ public class RobotContainer {
     op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
     (m_LightySubsystem))));
 
+    m_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    m_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    m_xButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    m_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
+
     drive_aButton.onTrue(Commands.runOnce(() -> resetGyro()));
     drive_bButton.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem));
 
   }
 
+
   
   private void configureShuffleBoard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+  }
+
+  private void configureCamera() {
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(320, 240);
+    camera.setFPS(10);
   }
 
   public void resetGyro() {
