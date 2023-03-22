@@ -13,12 +13,14 @@ import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
 import frc.robot.commands.LEDCommands.LEDYellowCommand;
+import frc.robot.commands.LimelightCommands.LightAim;
 import frc.robot.commands.SolenoidCommands.ExtendSolenoidCommand;
 import frc.robot.commands.SolenoidCommands.RetractSolenoidCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LightySubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
 import org.ejml.dense.row.MatrixFeatures_CDRM;
@@ -52,8 +54,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
+  private final LimelightSubsystem m_LimelightSubsystem = new LimelightSubsystem();
   // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -62,6 +65,7 @@ public class RobotContainer {
   static XboxController m_driverController = new XboxController(0);
   static XboxController m_operatorController = new XboxController(1);
   public final JoystickButton drive_aButton = new JoystickButton(m_driverController, Button.kA.value);
+  public final JoystickButton drive_bButton = new JoystickButton(m_driverController, Button.kB.value);
 
   public final JoystickButton op_aButton = new JoystickButton(m_driverController, Button.kA.value);
   public final JoystickButton op_yButton = new JoystickButton(m_driverController, Button.kY.value);
@@ -77,14 +81,14 @@ public class RobotContainer {
   public RobotContainer() {
     // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
 
-    m_drivetrainSubsystem.setDefaultCommand(
-        new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> m_driverController.getLeftY(),
-            () -> m_driverController.getLeftX(),
-            () -> m_driverController.getRightX(),
-            () -> op_rightBumper.getAsBoolean()
-          ));
+    // m_drivetrainSubsystem.setDefaultCommand(
+    //     new DefaultDriveCommand(
+    //         m_drivetrainSubsystem,
+    //         () -> m_driverController.getLeftY(),
+    //         () -> m_driverController.getLeftX(),
+    //         () -> m_driverController.getRightX(),
+    //         () -> op_rightBumper.getAsBoolean()
+    //       ));
 
     // Configure the trigger bindings
     configureBindings();
@@ -112,6 +116,7 @@ public class RobotContainer {
     (m_LightySubsystem))));
 
     drive_aButton.onTrue(Commands.runOnce(() -> resetGyro()));
+    drive_bButton.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem));
 
   }
 
@@ -121,7 +126,7 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    m_drivetrainSubsystem.zeroGyro();
+    // m_drivetrainSubsystem.zeroGyro();
   }
 
   /**
@@ -131,7 +136,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveDistanceX(m_drivetrainSubsystem, 1);
+    // return new DriveDistanceX(m_drivetrainSubsystem, 1);
+    return new InstantCommand();
   }
 
   public static XboxController getDriveController() {

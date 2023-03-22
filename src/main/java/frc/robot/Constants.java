@@ -115,6 +115,8 @@ public final class Constants {
   /* Angle Encoder Invert */
   public static final boolean canCoderInvert = false;
 
+  public static final double aimTolerance = 2;
+
   //TODO: Add offsets 
   /* Front Left Module - Module 0 */
   public static final class FrontLeftModule {
