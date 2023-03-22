@@ -100,7 +100,7 @@ public final class Constants {
   public static final double maxSpeed = 3.6576; // meters per second
 
   //TODO: Test rotation
-  public static final double maxAngularVelocity = 11.5;
+  public static final double maxAngularVelocity = maxSpeed / Math.hypot(wheelBase / 2.0, trackWidth / 2.0);;
 
   /* Neutral Modes */
   public static final IdleMode angleNeutralMode = IdleMode.kBrake;

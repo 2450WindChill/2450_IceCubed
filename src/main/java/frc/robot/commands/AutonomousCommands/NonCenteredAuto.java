@@ -6,18 +6,19 @@ package frc.robot.commands.AutonomousCommands;
 
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class AutonomousCommand extends SequentialCommandGroup {
+public class NonCenteredAuto extends SequentialCommandGroup {
   public DrivetrainSubsystem m_driveTrainSub;
-  public AutonomousCommand(RobotContainer robotContainer, DrivetrainSubsystem subsystem) {
+  public NonCenteredAuto(RobotContainer robotContainer, DrivetrainSubsystem subsystem) {
     m_driveTrainSub = subsystem;
     addRequirements(m_driveTrainSub);
 
     addCommands(
-        new DriveDistanceX(m_driveTrainSub, 1.0)
+        new FieldCentricAutoDrive(m_driveTrainSub, 15.0, new Translation2d(-2, 0), 0)
       );
   }
 }

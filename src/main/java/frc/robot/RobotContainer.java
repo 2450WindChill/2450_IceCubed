@@ -10,6 +10,8 @@ import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
 import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
 import frc.robot.commands.ArmCommands.RatchetArmSequentialCommand;
+import frc.robot.commands.AutonomousCommands.NonCenteredAuto;
+import frc.robot.commands.AutonomousCommands.CenteredAuto;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
@@ -24,10 +26,20 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import org.ejml.dense.row.MatrixFeatures_CDRM;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -55,8 +67,6 @@ public class RobotContainer {
 
 
 
-
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   static XboxController m_driverController = new XboxController(0);
@@ -73,7 +83,11 @@ public class RobotContainer {
   public final JoystickButton op_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton op_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
-  
+
+  public Command centered;
+  public Command nonCentered;
+  public SendableChooser<Command> m_chooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -91,10 +105,10 @@ public class RobotContainer {
             () -> drive_rightBumper.getAsBoolean()
           ));
 
-    // Configure the trigger bindings
     configureBindings();
     configureShuffleBoard();
     configureCamera();
+    configureAutoChooser();
   }
 
   /**
@@ -112,10 +126,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
-    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem).andThen(new WaitCommand(5).andThen(new LEDBlueCommand
-    (m_LightySubsystem))));
+
+    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
+    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
 
     op_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
     op_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
@@ -143,6 +158,18 @@ public class RobotContainer {
     m_drivetrainSubsystem.zeroGyro();
   }
 
+  public void configureAutoChooser() {
+    centered = new CenteredAuto(this, m_drivetrainSubsystem);
+    nonCentered = new NonCenteredAuto(this, m_drivetrainSubsystem);
+
+    m_chooser = new SendableChooser<>();
+
+    m_chooser.setDefaultOption("Non Centered", nonCentered);
+    m_chooser.addOption("Centered:", centered);
+
+    SmartDashboard.putData(m_chooser);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -150,8 +177,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return new DriveDistanceX(m_drivetrainSubsystem, 1);
-    return new InstantCommand();
+    return m_chooser.getSelected();
   }
 
   public static XboxController getDriveController() {
@@ -161,4 +187,5 @@ public class RobotContainer {
   public static XboxController getOperatorController() {
     return m_operatorController;
   }
+
 }

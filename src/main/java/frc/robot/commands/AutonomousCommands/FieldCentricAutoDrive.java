@@ -10,8 +10,10 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** An example command that uses an example subsystem. */
 public class FieldCentricAutoDrive extends CommandBase {
@@ -20,15 +22,22 @@ public class FieldCentricAutoDrive extends CommandBase {
   private double currentLocationFeet = 0;
   private double targetLocationFeet = 0;
 
+  private Translation2d m_speeds;
+  private double m_rotation;
+
+  private boolean movingForward;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public FieldCentricAutoDrive(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet) {
+  public FieldCentricAutoDrive(DrivetrainSubsystem drivetrainSubsystem, double desiredDistanceFeet, Translation2d speeds, double rotation) {
     m_driveSubsystem = drivetrainSubsystem;
-    currentLocationFeet = m_driveSubsystem.getFrontLeftEncoderVal();
-    targetLocationFeet = desiredDistanceFeet - currentLocationFeet;
+    m_speeds = speeds;
+    m_rotation = rotation;
+
+    targetLocationFeet = desiredDistanceFeet + currentLocationFeet;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSubsystem);
   }
@@ -36,30 +45,40 @@ public class FieldCentricAutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveSubsystem.fieldCentricAutonomousDrive(-0.3, 0, 0);
+    m_driveSubsystem.drive(m_speeds, m_rotation, false);
+
+    if (currentLocationFeet < targetLocationFeet) {
+      movingForward = true;
+    } else {
+      movingForward = false;
+    }
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double currentLocationRotations = m_driveSubsystem.getFrontLeftEncoderVal();
-    currentLocationFeet = currentLocationRotations / Constants.rotationsPerOneFoot;
+    currentLocationFeet = Math.abs(currentLocationRotations / Constants.rotationsPerOneFoot);
 
+    SmartDashboard.putNumber("Target Location", targetLocationFeet);
+    SmartDashboard.putNumber("Current Location", currentLocationFeet);
+
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_driveSubsystem.autonomousDrive(0, 0, 0);
+    m_driveSubsystem.drive(new Translation2d(0, 0), m_driveSubsystem.gyro.getYaw(), false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (currentLocationFeet >= targetLocationFeet){
-      return true;
+    if (movingForward){
+      return currentLocationFeet >= targetLocationFeet;
     } else {
-      return false;
+      return currentLocationFeet <= targetLocationFeet;
     }
   }
 }
