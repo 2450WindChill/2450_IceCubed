@@ -53,7 +53,7 @@ public class RobotContainer {
   // private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem();
   // private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
 
 
@@ -77,14 +77,14 @@ public class RobotContainer {
   public RobotContainer() {
     // m_ArmSubsystem.setDefaultCommand(new RotateArmCommand(m_ArmSubsystem));
 
-    m_drivetrainSubsystem.setDefaultCommand(
-        new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> m_driverController.getLeftY(),
-            () -> m_driverController.getLeftX(),
-            () -> m_driverController.getRightX(),
-            () -> op_rightBumper.getAsBoolean()
-          ));
+    // m_drivetrainSubsystem.setDefaultCommand(
+    //     new DefaultDriveCommand(
+    //         m_drivetrainSubsystem,
+    //         () -> m_driverController.getLeftY(),
+    //         () -> m_driverController.getLeftX(),
+    //         () -> m_driverController.getRightX(),
+    //         () -> op_rightBumper.getAsBoolean()
+    //       ));
 
     // Configure the trigger bindings
     configureBindings();
@@ -121,7 +121,7 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    m_drivetrainSubsystem.zeroGyro();
+    // m_drivetrainSubsystem.zeroGyro();
   }
 
   /**
@@ -131,7 +131,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveDistanceX(m_drivetrainSubsystem, 1);
+    // return new DriveDistanceX(m_drivetrainSubsystem, 1);
+    return new InstantCommand();
   }
 
   public static XboxController getDriveController() {
