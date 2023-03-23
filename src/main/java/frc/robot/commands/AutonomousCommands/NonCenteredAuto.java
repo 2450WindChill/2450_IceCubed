@@ -18,7 +18,7 @@ public class NonCenteredAuto extends SequentialCommandGroup {
     addRequirements(m_driveTrainSub);
 
     addCommands(
-        new FieldCentricAutoDrive(m_driveTrainSub, 15.0, new Translation2d(-2, 0), 0)
+        new FieldCentricAutoDrive(m_driveTrainSub, 5.0, new Translation2d(-0.5, 0), 0)
       );
   }
 }

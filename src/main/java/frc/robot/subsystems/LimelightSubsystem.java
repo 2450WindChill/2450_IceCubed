@@ -22,7 +22,7 @@ public class LimelightSubsystem extends SubsystemBase {
   public NetworkTable table;
 
   public LimelightSubsystem() {
-    turnOnLimelight();
+    turnOffLimelight();
   }
   
 

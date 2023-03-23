@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,13 +15,13 @@ public class LightySubsystem extends SubsystemBase {
   AddressableLED m_led;
   AddressableLEDBuffer m_ledBuffer;
 
-  AddressableLED m_led2;
-  AddressableLEDBuffer m_ledBuffer2;
+  DriverStation.Alliance m_teamColor;
   
   
   /** Creates a new LightySubsystem. */
-  public LightySubsystem() { 
-   
+  public LightySubsystem(DriverStation.Alliance teamColor) { 
+    m_teamColor = teamColor;
+
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
      m_led = new AddressableLED(9);
@@ -36,7 +37,11 @@ public class LightySubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
     m_led.start();
 
-    SetLEDsToBlue();
+    if (m_teamColor == DriverStation.Alliance.Blue) {
+      SetLEDsToBlue();
+    } else {
+      SetLEDsToRed();
+    }
   }
 
 

@@ -115,7 +115,7 @@ public final class Constants {
   /* Angle Encoder Invert */
   public static final boolean canCoderInvert = false;
 
-  public static final double aimTolerance = 2;
+  public static final double aimTolerance = 10;
 
   //TODO: Add offsets 
   /* Front Left Module - Module 0 */
@@ -159,14 +159,14 @@ public final class Constants {
   }
 
   public static double pidTolerance = 1;
-  public static double nonPidTolerance = 5;
+  public static double nonPidTolerance = 2;
 
   // Held by PID
-  public static double frontIntakeAngle = -20;
+  public static double frontIntakeAngle = -5;
   public static double singleSubstationAngle = -56.19;
 
   // Held by ratchet
-  public static double midRowPlacingAngle = -230.98;
+  public static double midRowPlacingAngle = -190;
   public static double backIntake = -260;
 
   public static double manipulatorIntakeSpeed = 0.5;

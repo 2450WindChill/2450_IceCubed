@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class FieldCentricAutoDrive extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_driveSubsystem;
-  private double currentLocationFeet = 0;
-  private double targetLocationFeet = 0;
+  private double currentLocationFeet;
+  private double targetLocationFeet;
 
   private Translation2d m_speeds;
   private double m_rotation;
@@ -45,18 +45,22 @@ public class FieldCentricAutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveSubsystem.drive(m_speeds, m_rotation, false);
+    System.err.println("INITIALIZE");
+    currentLocationFeet = Math.abs(m_driveSubsystem.getFrontLeftEncoderVal() / Constants.rotationsPerOneFoot);
 
     if (currentLocationFeet < targetLocationFeet) {
       movingForward = true;
     } else {
       movingForward = false;
     }
+
+    m_driveSubsystem.drive(m_speeds, m_rotation, false);
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.err.println("EXECUTING");
     double currentLocationRotations = m_driveSubsystem.getFrontLeftEncoderVal();
     currentLocationFeet = Math.abs(currentLocationRotations / Constants.rotationsPerOneFoot);
 
@@ -76,9 +80,12 @@ public class FieldCentricAutoDrive extends CommandBase {
   @Override
   public boolean isFinished() {
     if (movingForward){
+      System.err.println("CurrentLocation: " + currentLocationFeet + " >= TargetLocation: " + targetLocationFeet);
       return currentLocationFeet >= targetLocationFeet;
     } else {
+      System.err.println("CurrentLocation: " + currentLocationFeet + " <= TargetLocation: " + targetLocationFeet);
       return currentLocationFeet <= targetLocationFeet;
     }
   }
 }
+
