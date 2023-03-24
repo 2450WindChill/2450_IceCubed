@@ -95,6 +95,8 @@ public class RobotContainer {
   public Command nonCentered;
   public SendableChooser<Command> m_chooser;
 
+  public UsbCamera camera;
+
   /**
    * The container for the robot. Contains 
    * , OI devices, and commands.
@@ -114,9 +116,9 @@ public class RobotContainer {
 
 
     configureBindings();
-    configureShuffleBoard();
     configureCamera();
     configureAutoChooser();
+    configureShuffleBoard();
   }
 
   private void configureBindings() {
@@ -151,6 +153,8 @@ public class RobotContainer {
   
   private void configureShuffleBoard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    tab.add(camera);
+    tab.add(m_chooser);
   }
 
   private void configureCamera() {
@@ -167,8 +171,6 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("Non Centered", nonCentered);
     m_chooser.addOption("Centered:", centered);
-
-    SmartDashboard.putData(m_chooser);
   }
 
   /**

@@ -103,6 +103,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void ManualInputs(XboxController xbox) {
     double manipulatorSpeed = 0;
     boolean goingForward = xbox.getLeftX() > 0;
+    
 
     manipulatorSpeed = ((xbox.getRightTriggerAxis() - xbox.getLeftTriggerAxis())) / 2;
     topManipulatorMotor.set(manipulatorSpeed);
