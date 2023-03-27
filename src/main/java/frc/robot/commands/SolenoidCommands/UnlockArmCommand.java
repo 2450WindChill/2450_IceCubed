@@ -26,8 +26,8 @@ public class UnlockArmCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.pcmSolenoid.set(Value.kReverse);
-    System.err.println("RETRACTING");
+    // m_subsystem.pcmSolenoid.set(Value.kReverse);
+    //System.err.println("RETRACTING");
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +37,7 @@ public class UnlockArmCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.err.println("ENDING RETRACTION");
+    //System.err.println("ENDING RETRACTION");
   }
 
   // Returns true when the command should end.

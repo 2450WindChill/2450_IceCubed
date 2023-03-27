@@ -11,18 +11,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PneumaticsSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-  public DoubleSolenoid pcmSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  // Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  // public DoubleSolenoid pcmSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
 
   public PneumaticsSubsystem() {
-    pcmCompressor.enableDigital();
+    // pcmCompressor.enableDigital();
   }
   
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    pcmCompressor.enableDigital();
+
   }
 
   @Override

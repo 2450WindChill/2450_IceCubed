@@ -49,7 +49,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void drive(Translation2d translation, double rotation, boolean isRobotCentric) {
     SwerveModuleState[] swerveModuleStates;
-
+    // System.err.println("CALLING DRIVE");
     if (isRobotCentric) {
       swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
         new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
@@ -115,6 +115,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void zeroGyro() {
     gyro.setYaw(0);
+  }
+
+  public void motorAuto() {
+    System.err.println("Motor Auto go");
+    drive(new Translation2d(-0.8, 0), gyro.getYaw(), true);
+  }
+
+  public void stopAuto() {
+    System.err.println("Motor auto stop");
+    drive(new Translation2d(0, 0), gyro.getYaw(), true);
   }
 
   @Override

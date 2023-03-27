@@ -41,6 +41,7 @@ public class MoveToPositionNoPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentAngle = m_armSubsystem.armEncoder.getPosition();
     if (m_targetPosition > currentAngle) {
       movingForward = true;
     } else {
@@ -54,10 +55,10 @@ public class MoveToPositionNoPID extends CommandBase {
    
     if (movingForward == true){
       System.err.println("Moving foward");
-        m_armSubsystem.armMotor.set(0.4);
+        m_armSubsystem.armMotor.set(0.6);
     } else {
       System.err.println("Moving back");
-        m_armSubsystem.armMotor.set(-0.4);
+        m_armSubsystem.armMotor.set(-0.6);
     }
     
     System.err.println("MovetoPosition NO PID");

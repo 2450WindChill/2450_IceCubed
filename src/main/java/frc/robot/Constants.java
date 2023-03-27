@@ -40,7 +40,7 @@ public final class Constants {
   public static final double DRIVETRAIN_WHEELBASE_METERS = 0.54;
 
   // TODO: Fine tune this value
-  public static final double stickDeadband = 0.1;
+  public static final double stickDeadband = 0.125;
 
   public static final int pigeonID = 13;
   public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -115,7 +115,7 @@ public final class Constants {
   /* Angle Encoder Invert */
   public static final boolean canCoderInvert = false;
 
-  public static final double aimTolerance = 10;
+  public static final double aimTolerance = 4.5;
 
   //TODO: Add offsets 
   /* Front Left Module - Module 0 */
@@ -123,7 +123,7 @@ public final class Constants {
     public static final int driveMotorID = 7;
     public static final int angleMotorID = 8;
     public static final int canCoderID = 12;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(65);
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(71);
     public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
         canCoderID, angleOffset);
   }
@@ -143,7 +143,7 @@ public final class Constants {
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 2;
     public static final int canCoderID = 9;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(73);
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(66);
     public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
         canCoderID, angleOffset);
   }
@@ -162,11 +162,11 @@ public final class Constants {
   public static double nonPidTolerance = 2;
 
   // Held by PID
-  public static double frontIntakeAngle = -5;
+  public static double frontIntakeAngle = -10;
   public static double singleSubstationAngle = -56.19;
 
   // Held by ratchet
-  public static double midRowPlacingAngle = -190;
+  public static double midRowPlacingAngle = -200;
   public static double backIntake = -260;
 
   public static double manipulatorIntakeSpeed = 0.5;

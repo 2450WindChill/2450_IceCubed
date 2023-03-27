@@ -6,12 +6,17 @@ package frc.robot;
 
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.ArmCommands.DefaultArmCommand;
+import frc.robot.commands.ArmCommands.ManipulatorAuto;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
 import frc.robot.commands.ArmCommands.MoveToPositionPID;
 import frc.robot.commands.ArmCommands.NonRatchetArmSequentialCommand;
 import frc.robot.commands.ArmCommands.RatchetArmSequentialCommand;
-import frc.robot.commands.AutonomousCommands.NonCenteredAuto;
+import frc.robot.commands.ArmCommands.StopManipulatorAuto;
+import frc.robot.commands.AutonomousCommands.PeicePlacerAuto;
+import frc.robot.commands.AutonomousCommands.RobotCentricAutoDrive;
 import frc.robot.commands.AutonomousCommands.CenteredAuto;
+import frc.robot.commands.AutonomousCommands.FieldCentricAutoDrive;
+import frc.robot.commands.AutonomousCommands.NonCenteredAuto;
 import frc.robot.commands.LEDCommands.LEDBlueCommand;
 import frc.robot.commands.LEDCommands.LEDGreenCommand;
 import frc.robot.commands.LEDCommands.LEDPurpleCommand;
@@ -33,6 +38,7 @@ import javax.swing.text.StyleContext.SmallAttributeSet;
 import org.ejml.dense.row.MatrixFeatures_CDRM;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanArrayTopic;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -46,6 +52,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -63,16 +70,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  public DriverStation.Alliance teamColor = DriverStation.getAlliance();
+  public DriverStation.Alliance teamColor;
 
   // The robot's subsystems and commands are defined here...
   private final PneumaticsSubsystem m_PneumaticsSubsystem = new PneumaticsSubsystem();
   private final LightySubsystem m_LightySubsystem = new LightySubsystem(teamColor);
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final LimelightSubsystem m_LimelightSubsystem = new LimelightSubsystem();
-
-
+  // private final LimelightSubsystem m_LimelightSubsystem = new LimelightSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -93,12 +98,13 @@ public class RobotContainer {
 
   public Command centered;
   public Command nonCentered;
+  public Command piecePlacer;
   public SendableChooser<Command> m_chooser;
 
-  public UsbCamera camera;
+  public UsbCamera camera = CameraServer.startAutomaticCapture();
 
   /**
-   * The container for the robot. Contains 
+   * The container for the robot. Contains
    * , OI devices, and commands.
    */
   public RobotContainer() {
@@ -110,10 +116,7 @@ public class RobotContainer {
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
             () -> m_driverController.getRightX(),
-            () -> drive_rightBumper.getAsBoolean()
-          ));
-    
-
+            () -> drive_rightBumper.getAsBoolean()));
 
     configureBindings();
     configureCamera();
@@ -139,26 +142,28 @@ public class RobotContainer {
 
     }
 
-    op_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
-    op_bButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
-    op_xButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    op_aButton
+        .onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    op_bButton.onTrue(
+        new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    op_xButton
+        .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
     op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
-    drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor));
+    // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor));
+    // drive_bButton.onTrue(new RobotCentricAutoDrive(m_drivetrainSubsystem, 5, new
+    // Translation2d(-0.8, 0), 0));
 
   }
 
-
-  
   private void configureShuffleBoard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
     tab.add(camera);
-    tab.add(m_chooser);
+    // tab.add(m_LimelightSubsystem.table);
   }
 
   private void configureCamera() {
-    UsbCamera camera = CameraServer.startAutomaticCapture();
     camera.setResolution(320, 240);
     camera.setFPS(10);
   }
@@ -166,11 +171,13 @@ public class RobotContainer {
   public void configureAutoChooser() {
     centered = new CenteredAuto(this, m_drivetrainSubsystem);
     nonCentered = new NonCenteredAuto(this, m_drivetrainSubsystem);
+    piecePlacer = new PeicePlacerAuto(this, m_ArmSubsystem);
 
     m_chooser = new SendableChooser<>();
 
     m_chooser.setDefaultOption("Non Centered", nonCentered);
     m_chooser.addOption("Centered:", centered);
+    m_chooser.addOption("Piece Placer:", piecePlacer);
   }
 
   /**
@@ -180,7 +187,30 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_chooser.getSelected();
+    // return m_chooser.getSelected();
+
+    // return new Instan(Command();
+    // return new PeicePlacerAuto(this, m_ArmSubsystem);
+
+
+    return Commands.runOnce(() -> setLEDsToAlliance())
+        .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
+        .andThen(new ManipulatorAuto(m_ArmSubsystem))
+        .andThen(new WaitCommand(2))
+        .andThen(new StopManipulatorAuto(m_ArmSubsystem))
+        .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
+        .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
+        .andThen(new WaitCommand(5))
+        .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
+
+  }
+
+  public void setLEDsToAlliance() {
+    teamColor = DriverStation.getAlliance();
+    if (teamColor == DriverStation.Alliance.Red) {
+      System.err.println("Alliance RED");
+      m_LightySubsystem.SetLEDsToRed();
+    }
   }
 
   public static XboxController getDriveController() {

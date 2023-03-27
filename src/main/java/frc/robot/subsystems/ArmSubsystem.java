@@ -123,7 +123,7 @@ public class ArmSubsystem extends SubsystemBase {
       // System.err.println("Limit switch hit");
       // armMotor.set(0);
       // } else {
-      armMotor.set(xbox.getLeftX() / 4);
+      armMotor.set(xbox.getLeftX() / 1.3);
 
     }
 

@@ -37,11 +37,7 @@ public class LightySubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
     m_led.start();
 
-    if (m_teamColor == DriverStation.Alliance.Blue) {
-      SetLEDsToBlue();
-    } else {
-      SetLEDsToRed();
-    }
+    SetLEDsToBlue();
   }
 
 

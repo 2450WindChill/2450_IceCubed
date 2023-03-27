@@ -18,7 +18,7 @@ public class CenteredAuto extends SequentialCommandGroup {
     addRequirements(m_driveTrainSub);
 
     addCommands(
-        new FieldCentricAutoDrive(m_driveTrainSub, 5.0, new Translation2d(-2.0, 0.0), 0)
+        new FieldCentricAutoDrive(m_driveTrainSub, new Translation2d(-2.0, 0.0), 0)
       );
   }
 }

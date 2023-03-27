@@ -26,8 +26,8 @@ public class LockArmCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.pcmSolenoid.set(Value.kForward);
-    System.err.println("EXTENDING");
+    // m_subsystem.pcmSolenoid.set(Value.kForward);
+    //System.err.println("EXTENDING");
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +37,7 @@ public class LockArmCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.err.println("ENDING EXTEND");
+    //System.err.println("ENDING EXTEND");
   }
 
   // Returns true when the command should end.

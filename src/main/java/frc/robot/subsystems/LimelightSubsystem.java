@@ -35,7 +35,7 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
 
-    table.getEntry("pipeline").setNumber(0);
+    // table.getEntry("pipeline").setNumber(0);
 
     //read values periodically
     x = tx.getDouble(0.0);
@@ -52,11 +52,11 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public void turnOnLimelight(){
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
   }
 
   public void turnOffLimelight(){
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
   }
 
   @Override
