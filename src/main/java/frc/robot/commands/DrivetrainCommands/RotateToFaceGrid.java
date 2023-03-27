@@ -5,6 +5,7 @@
 package frc.robot.commands.DrivetrainCommands;
 
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -50,10 +51,10 @@ public class RotateToFaceGrid extends CommandBase {
     } else {
       if (trueRotation <= 180) {
           rotatingPositive = true;
-          m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, true);
+          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), -0.2, true);
       } else {
           rotatingPositive = false;
-          m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, true);
+          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), 0.2, true);
       }
     }
   }

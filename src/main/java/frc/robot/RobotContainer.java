@@ -116,7 +116,8 @@ public class RobotContainer {
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
             () -> m_driverController.getRightX(),
-            () -> drive_rightBumper.getAsBoolean()));
+            () -> drive_rightBumper.getAsBoolean()
+          ));
 
     configureBindings();
     configureCamera();
