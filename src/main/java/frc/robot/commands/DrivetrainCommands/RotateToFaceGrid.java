@@ -20,15 +20,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class RotateToPosition extends CommandBase {
+public class RotateToFaceGrid extends CommandBase {
     private DrivetrainSubsystem m_driveSubsystem;
     private boolean rotatingPositive;
-    private double m_desiredRotation;
     private double trueRotation;
   
-    public RotateToPosition(DrivetrainSubsystem subsystem, double desiredRotation) {
+    public RotateToFaceGrid(DrivetrainSubsystem subsystem) {
         m_driveSubsystem = subsystem;
-        m_desiredRotation = desiredRotation;
         trueRotation = m_driveSubsystem.gyro.getYaw();
 
         // Use addRequirements() here to declare subsystem dependencies.
@@ -47,29 +45,24 @@ public class RotateToPosition extends CommandBase {
 
     if (trueRotation > 360) {
         trueRotation = trueRotation - 360;
-    } else if (trueRotation < -360) {
+    } else if (trueRotation < 0) {
         trueRotation = trueRotation + 360;
     } else {
-      if (trueRotation <= m_desiredRotation) {
+      if (trueRotation <= 180) {
           rotatingPositive = true;
-          m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, false);
+          m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, true);
       } else {
           rotatingPositive = false;
-          m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, false);
+          m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, true);
       }
     }
   }
 
   public void end(boolean interrupted) {
-    m_driveSubsystem.drive(new Translation2d(0, 0), 0, false);
+    m_driveSubsystem.drive(new Translation2d(0, 0), 0, true);
   }
 
   public boolean isFinished() {
-    if (rotatingPositive){
-        return m_driveSubsystem.gyro.getYaw() >= m_desiredRotation;
-    } else {
-        return m_driveSubsystem.gyro.getYaw() <= m_desiredRotation;
-    }
-    
+    return m_driveSubsystem.gyro.getYaw() >= -2 && m_driveSubsystem.gyro.getYaw() <= 2;
   }
 }
