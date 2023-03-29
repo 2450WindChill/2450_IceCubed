@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
+import frc.robot.commands.DrivetrainCommands.DirectionalDrive;
 import frc.robot.commands.ArmCommands.DefaultArmCommand;
 import frc.robot.commands.ArmCommands.ManipulatorAuto;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
@@ -86,8 +87,13 @@ public class RobotContainer {
 
   public final JoystickButton drive_aButton = new JoystickButton(m_driverController, Button.kA.value);
   public final JoystickButton drive_bButton = new JoystickButton(m_driverController, Button.kB.value);
+
+  public final JoystickButton drive_xButton = new JoystickButton(m_driverController, Button.kX.value);
+  public final JoystickButton drive_yButton = new JoystickButton(m_driverController, Button.kY.value);
+
   public final JoystickButton drive_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   public final JoystickButton drive_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
+
 
   public final JoystickButton op_aButton = new JoystickButton(m_operatorController, Button.kA.value);
   public final JoystickButton op_yButton = new JoystickButton(m_operatorController, Button.kY.value);
@@ -126,6 +132,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    drive_aButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.BACK));
+    drive_bButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.RIGHT));
+    drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
+    drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
+
 
     if (teamColor == DriverStation.Alliance.Blue) {
 
@@ -151,7 +162,6 @@ public class RobotContainer {
         .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
     op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
-    drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor));
     // drive_bButton.onTrue(new RobotCentricAutoDrive(m_drivetrainSubsystem, 5, new
     // Translation2d(-0.8, 0), 0));

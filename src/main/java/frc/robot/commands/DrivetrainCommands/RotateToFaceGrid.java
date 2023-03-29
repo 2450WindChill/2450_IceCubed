@@ -43,7 +43,6 @@ public class RotateToFaceGrid extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     if (trueRotation > 360) {
         trueRotation = trueRotation - 360;
     } else if (trueRotation < 0) {

@@ -55,10 +55,10 @@ public class MoveToPositionNoPID extends CommandBase {
    
     if (movingForward == true){
       System.err.println("Moving foward");
-        m_armSubsystem.armMotor.set(0.6);
+        m_armSubsystem.armMotor.set(0.85);
     } else {
       System.err.println("Moving back");
-        m_armSubsystem.armMotor.set(-0.6);
+        m_armSubsystem.armMotor.set(-0.85);
     }
     
     System.err.println("MovetoPosition NO PID");
