@@ -56,7 +56,8 @@ public class WindChillSwerveModule {
 
     reseedTimer.start();
 
-    motorEncoderPositionCoefficient = 2.0 * Math.PI / Constants.TICKS_PER_ROTATION *  ModuleConfiguration.MK4I_L1.getSteerReduction();
+    motorEncoderPositionCoefficient = 2.0 * Math.PI / Constants.TICKS_PER_ROTATION
+        * ModuleConfiguration.MK4I_L1.getSteerReduction();
     motorEncoderVelocityCoefficient = motorEncoderPositionCoefficient * 10.0;
 
     /* Angle Encoder Config */
@@ -83,6 +84,7 @@ public class WindChillSwerveModule {
     // Custom optimize command, since default WPILib optimize assumes continuous
     // controller which
     // REV and CTRE are not
+
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
     setAngle(desiredState);
@@ -96,25 +98,40 @@ public class WindChillSwerveModule {
 
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
+    // Rotation2d angle = desiredState.angle;
+
     Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.maxSpeed * 0.01))
         ? lastAngle
         : desiredState.angle;
+
+    double newAngle = angle.getDegrees();
+
+    while (newAngle < 0) {
+      newAngle += 360;
+    }
+
+    while (newAngle > 360) {
+      newAngle -= 360;
+    }
 
     if (reseedTimer.advanceIfElapsed(ENCODER_RESEED_SECONDS) &&
         angleEncoder.getVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESEED_MAX_ANGULAR_VELOCITY) {
       resetToAbsolute();
     }
 
+    angleController.setReference(newAngle, ControlType.kPosition);
 
-
-    angleController.setReference(angle.getDegrees(), ControlType.kPosition);
+    if (moduleNumber == 0) {
+      // System.err.println("Angle: " + newAngle);
+    }
     lastAngle = angle;
   }
 
   private void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
     integratedAngleEncoder.setPosition(absolutePosition);
-    System.err.println("Reseting Mod " + moduleNumber + " to " + absolutePosition);
+    // System.err.println("Reseting Mod " + moduleNumber + " to " +
+    // absolutePosition);
   }
 
   private Rotation2d getAngle() {
