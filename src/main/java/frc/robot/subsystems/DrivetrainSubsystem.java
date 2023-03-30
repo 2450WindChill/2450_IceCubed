@@ -45,6 +45,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getModulePositions(),
       new Pose2d(0, 0, new Rotation2d(0))
     );
+
+    periodic();
   }
 
   public void drive(Translation2d translation, double rotation, boolean isRobotCentric) {
@@ -146,7 +148,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getGyroAsRotation2d(),
       getModulePositions()
     );
-    SmartDashboard.putNumber("Gyro", gyro.getYaw());
+    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
+    SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
+    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+
+
   }
 
   @Override

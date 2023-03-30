@@ -28,7 +28,7 @@ public class ManipulatorAuto extends CommandBase {
     }
     @Override
     public void initialize() {
-        double manipulatorSpeed = .5;
+        double manipulatorSpeed = -1;
         m_subsystem.topManipulatorMotor.set(manipulatorSpeed);
         m_subsystem.bottomManipulatorMotor.set(-manipulatorSpeed);
         // new WaitCommand(2);

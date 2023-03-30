@@ -50,10 +50,10 @@ public class RotateToFaceSingleSubstation extends CommandBase {
     } else {
       if (trueRotation <= 90 && trueRotation >= 270) {
           rotatingPositive = true;
-          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), -0.2, true);
+          m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, true);
       } else {
           rotatingPositive = false;
-          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), 0.2, true);
+          m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, true);
       }
     }
   }

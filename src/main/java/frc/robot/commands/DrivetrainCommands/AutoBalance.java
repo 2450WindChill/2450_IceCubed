@@ -36,10 +36,13 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
-      if (m_subsystem.gyro.getRoll() < -5) {
-        m_subsystem.drive(new Translation2d(-0.2, 0), 0, false);
-      } else if (m_subsystem.gyro.getRoll() > 5) {
-        m_subsystem.drive(new Translation2d(0.2, 0), 0, false);
+      if (m_subsystem.gyro.getPitch() < -8) {
+        m_subsystem.drive(new Translation2d(-0.5, 0), 0, false);
+      } else if (m_subsystem.gyro.getPitch() > 5) {
+        m_subsystem.drive(new Translation2d(0.5, 0), 0, false);
+      }
+      else {
+        // ???? 
       }
     }
     @Override

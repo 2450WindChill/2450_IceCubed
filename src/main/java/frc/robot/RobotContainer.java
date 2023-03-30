@@ -106,8 +106,9 @@ public class RobotContainer {
   public final JoystickButton op_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
 
   public Command centered;
-  public Command nonCentered;
-  public Command piecePlacer;
+  public Command shortSide;
+  public Command cableSide;
+
   public SendableChooser<Command> m_chooser;
 
   public UsbCamera camera = CameraServer.startAutomaticCapture();
@@ -140,22 +141,13 @@ public class RobotContainer {
     // drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
     // drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
 
+    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5))
+        .andThen(Commands.runOnce(() -> setLEDsToAlliance())));
 
-    if (teamColor == DriverStation.Alliance.Blue) {
-
-      op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
-          .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-      op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
-          .andThen(new WaitCommand(5).andThen(new LEDBlueCommand(m_LightySubsystem))));
-
-    } else {
-
-      op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
-          .andThen(new WaitCommand(5).andThen(new LEDRedCommand(m_LightySubsystem))));
-      op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
-          .andThen(new WaitCommand(5).andThen(new LEDRedCommand(m_LightySubsystem))));
-
-    }
+    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
+        .andThen(new WaitCommand(5)
+        .andThen(Commands.runOnce(() -> setLEDsToAlliance()))));
 
     op_aButton
         .onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
@@ -167,13 +159,21 @@ public class RobotContainer {
 
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
+    drive_yButton.onTrue(new RotateToFaceSingleSubstation(m_drivetrainSubsystem));
 
   }
 
   private void configureShuffleBoard() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-    tab.add(camera);
-    // tab.add(m_LimelightSubsystem.table);
+
+    Shuffleboard.getTab("Competition Tab")
+    .add("Camera", camera)
+    .withSize(5, 4)
+    .withPosition(0, 0);
+
+    Shuffleboard.getTab("Competition Tab")
+    .add("Auto Chooser", m_chooser)
+    .withSize(2, 1)
+    .withPosition(5, 0);
   }
 
   private void configureCamera() {
@@ -186,24 +186,24 @@ public class RobotContainer {
                   // Score Cone
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
                   .andThen(new ManipulatorAuto(m_ArmSubsystem))
-                  .andThen(new WaitCommand(2))
+                  .andThen(new WaitCommand(0.5))
                   .andThen(new StopManipulatorAuto(m_ArmSubsystem))
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
 
                   // Move onto charge station and balance
-                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
-                  .andThen(new WaitCommand(1))
-                  .andThen(new RotateToFaceSingleSubstation(m_drivetrainSubsystem))
-                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
-                  .andThen(new WaitCommand(2))
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1.5, 0), 0))
+                  .andThen(new WaitCommand(3))
+                  // .andThen(new RotateToFaceSingleSubstation(m_drivetrainSubsystem))
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
+                  // .andThen(new WaitCommand(2))
+                  // .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
                   .andThen(new AutoBalance(m_drivetrainSubsystem));
 
-    nonCentered = Commands.runOnce(() -> setLEDsToAlliance())
+    shortSide = Commands.runOnce(() -> setLEDsToAlliance())
                   // Score Cone
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
                   .andThen(new ManipulatorAuto(m_ArmSubsystem))
-                  .andThen(new WaitCommand(2))
+                  .andThen(new WaitCommand(0.5))
                   .andThen(new StopManipulatorAuto(m_ArmSubsystem))
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
 
@@ -212,11 +212,19 @@ public class RobotContainer {
                   .andThen(new WaitCommand(5))
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
 
+    cableSide = Commands.runOnce(() -> setLEDsToAlliance())
+                // Score Cone
+                .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
+                .andThen(new ManipulatorAuto(m_ArmSubsystem))
+                .andThen(new WaitCommand(0.5))
+                .andThen(new StopManipulatorAuto(m_ArmSubsystem))
+                .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle));
+
     m_chooser = new SendableChooser<>();
 
-    m_chooser.setDefaultOption("Non Centered", nonCentered);
-    m_chooser.addOption("Centered:", centered);
-    m_chooser.addOption("Piece Placer:", piecePlacer);
+    m_chooser.setDefaultOption("Cable Side", cableSide);
+    m_chooser.addOption("Centered", centered);
+    m_chooser.addOption("Short Side", shortSide);
   }
 
   /**
@@ -225,26 +233,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return m_chooser.getSelected();
-
-    // return new Instan(Command();
-    // return new PeicePlacerAuto(this, m_ArmSubsystem);
-
-
-    return Commands.runOnce(() -> setLEDsToAlliance())
-
-        // Score Cone
-        .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
-        .andThen(new ManipulatorAuto(m_ArmSubsystem))
-        .andThen(new WaitCommand(2))
-        .andThen(new StopManipulatorAuto(m_ArmSubsystem))
-        .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
-
-        // Move out of community
-        .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
-        .andThen(new WaitCommand(5))
-        .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
+    return m_chooser.getSelected();
   }
 
   public void setLEDsToAlliance() {
@@ -252,6 +241,9 @@ public class RobotContainer {
     if (teamColor == DriverStation.Alliance.Red) {
       System.err.println("Alliance RED");
       m_LightySubsystem.SetLEDsToRed();
+    } else {
+      System.err.println("Alliance BLUE");
+      m_LightySubsystem.SetLEDsToBlue();
     }
   }
 
