@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.commands.DrivetrainCommands.AutoBalance;
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.DrivetrainCommands.DirectionalDrive;
+import frc.robot.commands.DrivetrainCommands.RotateToFaceGrid;
+import frc.robot.commands.DrivetrainCommands.RotateToFaceSingleSubstation;
 import frc.robot.commands.ArmCommands.DefaultArmCommand;
 import frc.robot.commands.ArmCommands.ManipulatorAuto;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
@@ -132,10 +135,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drive_aButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.BACK));
-    drive_bButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.RIGHT));
-    drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
-    drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
+    // drive_aButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.BACK));
+    // drive_bButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.RIGHT));
+    // drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
+    // drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
 
 
     if (teamColor == DriverStation.Alliance.Blue) {
@@ -162,9 +165,8 @@ public class RobotContainer {
         .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
     op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
-    // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor));
-    // drive_bButton.onTrue(new RobotCentricAutoDrive(m_drivetrainSubsystem, 5, new
-    // Translation2d(-0.8, 0), 0));
+    // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
+    drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
 
   }
 
@@ -180,9 +182,35 @@ public class RobotContainer {
   }
 
   public void configureAutoChooser() {
-    centered = new CenteredAuto(this, m_drivetrainSubsystem);
-    nonCentered = new NonCenteredAuto(this, m_drivetrainSubsystem);
-    piecePlacer = new PeicePlacerAuto(this, m_ArmSubsystem);
+    centered = Commands.runOnce(() -> setLEDsToAlliance())
+                  // Score Cone
+                  .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
+                  .andThen(new ManipulatorAuto(m_ArmSubsystem))
+                  .andThen(new WaitCommand(2))
+                  .andThen(new StopManipulatorAuto(m_ArmSubsystem))
+                  .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
+
+                  // Move onto charge station and balance
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
+                  .andThen(new WaitCommand(1))
+                  .andThen(new RotateToFaceSingleSubstation(m_drivetrainSubsystem))
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
+                  .andThen(new WaitCommand(2))
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
+                  .andThen(new AutoBalance(m_drivetrainSubsystem));
+
+    nonCentered = Commands.runOnce(() -> setLEDsToAlliance())
+                  // Score Cone
+                  .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
+                  .andThen(new ManipulatorAuto(m_ArmSubsystem))
+                  .andThen(new WaitCommand(2))
+                  .andThen(new StopManipulatorAuto(m_ArmSubsystem))
+                  .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
+
+                  // Move out of community
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
+                  .andThen(new WaitCommand(5))
+                  .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
 
     m_chooser = new SendableChooser<>();
 
@@ -205,15 +233,18 @@ public class RobotContainer {
 
 
     return Commands.runOnce(() -> setLEDsToAlliance())
+
+        // Score Cone
         .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
         .andThen(new ManipulatorAuto(m_ArmSubsystem))
         .andThen(new WaitCommand(2))
         .andThen(new StopManipulatorAuto(m_ArmSubsystem))
         .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.singleSubstationAngle))
+
+        // Move out of community
         .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1, 0), 0))
         .andThen(new WaitCommand(5))
         .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
-
   }
 
   public void setLEDsToAlliance() {
