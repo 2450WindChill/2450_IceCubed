@@ -105,9 +105,9 @@ public class RobotContainer {
   public final JoystickButton op_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
 
-  public Command centered;
-  public Command shortSide;
-  public Command cableSide;
+  public Command balance;
+  public Command backOut;
+  public Command onlyScore;
 
   public SendableChooser<Command> m_chooser;
 
@@ -132,7 +132,7 @@ public class RobotContainer {
     configureBindings();
     configureCamera();
     configureAutoChooser();
-    configureShuffleBoard();
+    configureShuffleboard();
   }
 
   private void configureBindings() {
@@ -160,20 +160,8 @@ public class RobotContainer {
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
     drive_yButton.onTrue(new RotateToFaceSingleSubstation(m_drivetrainSubsystem));
+    drive_xButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
 
-  }
-
-  private void configureShuffleBoard() {
-
-    Shuffleboard.getTab("Competition Tab")
-    .add("Camera", camera)
-    .withSize(5, 4)
-    .withPosition(0, 0);
-
-    Shuffleboard.getTab("Competition Tab")
-    .add("Auto Chooser", m_chooser)
-    .withSize(2, 1)
-    .withPosition(5, 0);
   }
 
   private void configureCamera() {
@@ -182,7 +170,7 @@ public class RobotContainer {
   }
 
   public void configureAutoChooser() {
-    centered = Commands.runOnce(() -> setLEDsToAlliance())
+    balance = Commands.runOnce(() -> setLEDsToAlliance())
                   // Score Cone
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
                   .andThen(new ManipulatorAuto(m_ArmSubsystem))
@@ -192,14 +180,11 @@ public class RobotContainer {
 
                   // Move onto charge station and balance
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1.5, 0), 0))
-                  .andThen(new WaitCommand(3))
-                  // .andThen(new RotateToFaceSingleSubstation(m_drivetrainSubsystem))
+                  .andThen(new WaitCommand(2.5))
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
-                  // .andThen(new WaitCommand(2))
-                  // .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
                   .andThen(new AutoBalance(m_drivetrainSubsystem));
 
-    shortSide = Commands.runOnce(() -> setLEDsToAlliance())
+    backOut = Commands.runOnce(() -> setLEDsToAlliance())
                   // Score Cone
                   .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
                   .andThen(new ManipulatorAuto(m_ArmSubsystem))
@@ -212,7 +197,7 @@ public class RobotContainer {
                   .andThen(new WaitCommand(5))
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0));
 
-    cableSide = Commands.runOnce(() -> setLEDsToAlliance())
+    onlyScore = Commands.runOnce(() -> setLEDsToAlliance())
                 // Score Cone
                 .andThen(new MoveToPositionNoPID(m_ArmSubsystem, Constants.midRowPlacingAngle))
                 .andThen(new ManipulatorAuto(m_ArmSubsystem))
@@ -222,9 +207,26 @@ public class RobotContainer {
 
     m_chooser = new SendableChooser<>();
 
-    m_chooser.setDefaultOption("Cable Side", cableSide);
-    m_chooser.addOption("Centered", centered);
-    m_chooser.addOption("Short Side", shortSide);
+    m_chooser.setDefaultOption("Only Score", onlyScore);
+    m_chooser.addOption("Balance", balance);
+    m_chooser.addOption("Back Out", backOut);
+  }
+
+  private void configureShuffleboard() {
+    Shuffleboard.getTab("Competition Tab")
+    .add("Camera", camera)
+    .withSize(5, 4)
+    .withPosition(0, 0);
+
+    Shuffleboard.getTab("Competition Tab")
+    .add("Auto Chooser", m_chooser)
+    .withSize(2, 1)
+    .withPosition(5, 0);
+
+    Shuffleboard.getTab("Competition Tab")
+    .add("Gyro", m_drivetrainSubsystem.gyro.getYaw())
+    .withSize(2, 1)
+    .withPosition(5, 1);
   }
 
   /**

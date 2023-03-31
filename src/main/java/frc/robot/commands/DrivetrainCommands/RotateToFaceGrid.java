@@ -37,25 +37,26 @@ public class RotateToFaceGrid extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    while (trueRotation > 360) {
+      trueRotation = trueRotation - 360;
+    }
+    while (trueRotation < 0) {
+      trueRotation = trueRotation + 360;
+    }
+
+    if (trueRotation <= 180) {
+        rotatingPositive = true;
+        m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, true);
+    } else {
+        rotatingPositive = false;
+        m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, true);
+    }
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (trueRotation > 360) {
-        trueRotation = trueRotation - 360;
-    } else if (trueRotation < 0) {
-        trueRotation = trueRotation + 360;
-    } else {
-      if (trueRotation <= 180) {
-          rotatingPositive = true;
-          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), -0.2, true);
-      } else {
-          rotatingPositive = false;
-          m_driveSubsystem.drive(new Translation2d(RobotContainer.getDriveController().getLeftY(), RobotContainer.getDriveController().getLeftX()), 0.2, true);
-      }
-    }
+
   }
 
   public void end(boolean interrupted) {
@@ -63,6 +64,7 @@ public class RotateToFaceGrid extends CommandBase {
   }
 
   public boolean isFinished() {
-    return m_driveSubsystem.gyro.getYaw() >= -2 && m_driveSubsystem.gyro.getYaw() <= 2;
+    return m_driveSubsystem.gyro.getYaw() >= -1 && m_driveSubsystem.gyro.getYaw() <= 1;
+    // return M-driveSubsytem.gyro.getYaw() == 0;
   }
 }
