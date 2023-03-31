@@ -21,14 +21,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class RotateToFaceSingleSubstation extends CommandBase {
+public class RotateToFaceBlueSingleSubstation extends CommandBase {
     private DrivetrainSubsystem m_driveSubsystem;
-    private boolean rotatingPositive;
     private double trueRotation;
   
-    public RotateToFaceSingleSubstation(DrivetrainSubsystem subsystem) {
+    public RotateToFaceBlueSingleSubstation(DrivetrainSubsystem subsystem) {
         m_driveSubsystem = subsystem;
-        trueRotation = m_driveSubsystem.gyro.getYaw();
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(subsystem);
@@ -37,25 +35,26 @@ public class RotateToFaceSingleSubstation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    trueRotation = m_driveSubsystem.gyro.getYaw();
+
+    while (trueRotation > 360) {
+      trueRotation -= 360;
+    }
+    while (trueRotation < 0) {
+      trueRotation += 360;
+    }
+
+    if (trueRotation <= 90 && trueRotation >= 270) {
+        m_driveSubsystem.drive(new Translation2d(0, 0), 2, true);
+    } else {
+        m_driveSubsystem.drive(new Translation2d(0, 0), -2, true);
+    }
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (trueRotation > 360) {
-        trueRotation = trueRotation - 360;
-    } else if (trueRotation < 0) {
-        trueRotation = trueRotation + 360;
-    } else {
-      if (trueRotation <= 90 && trueRotation >= 270) {
-          rotatingPositive = true;
-          m_driveSubsystem.drive(new Translation2d(0, 0), -0.2, true);
-      } else {
-          rotatingPositive = false;
-          m_driveSubsystem.drive(new Translation2d(0, 0), 0.2, true);
-      }
-    }
+    System.err.println(trueRotation);
   }
 
   public void end(boolean interrupted) {
@@ -63,6 +62,7 @@ public class RotateToFaceSingleSubstation extends CommandBase {
   }
 
   public boolean isFinished() {
-    return m_driveSubsystem.gyro.getYaw() >= -92 && m_driveSubsystem.gyro.getYaw() <= 92;
+    return (m_driveSubsystem.gyro.getYaw() >= 89 && m_driveSubsystem.gyro.getYaw() <= 91);
+    // return m_driveSubsystem.gyro.getYaw() == 90;
   }
 }

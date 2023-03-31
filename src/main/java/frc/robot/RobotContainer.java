@@ -8,7 +8,8 @@ import frc.robot.commands.DrivetrainCommands.AutoBalance;
 import frc.robot.commands.DrivetrainCommands.DefaultDriveCommand;
 import frc.robot.commands.DrivetrainCommands.DirectionalDrive;
 import frc.robot.commands.DrivetrainCommands.RotateToFaceGrid;
-import frc.robot.commands.DrivetrainCommands.RotateToFaceSingleSubstation;
+import frc.robot.commands.DrivetrainCommands.RotateToFaceRedSingleSubstation;
+import frc.robot.commands.DrivetrainCommands.RotateToFaceBlueSingleSubstation;
 import frc.robot.commands.ArmCommands.DefaultArmCommand;
 import frc.robot.commands.ArmCommands.ManipulatorAuto;
 import frc.robot.commands.ArmCommands.MoveToPositionNoPID;
@@ -159,8 +160,9 @@ public class RobotContainer {
 
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
-    drive_yButton.onTrue(new RotateToFaceSingleSubstation(m_drivetrainSubsystem));
-    drive_xButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
+    drive_bButton.onTrue(new RotateToFaceRedSingleSubstation(m_drivetrainSubsystem));
+    drive_xButton.onTrue(new RotateToFaceBlueSingleSubstation(m_drivetrainSubsystem));
+    drive_yButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
 
   }
 

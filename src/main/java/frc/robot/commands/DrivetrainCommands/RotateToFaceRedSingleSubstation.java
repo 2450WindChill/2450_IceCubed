@@ -21,12 +21,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /** An example command that uses an example subsystem. */
-public class RotateToFaceGrid extends CommandBase {
+public class RotateToFaceRedSingleSubstation extends CommandBase {
     private DrivetrainSubsystem m_driveSubsystem;
-    private boolean rotatingPositive;
     private double trueRotation;
   
-    public RotateToFaceGrid(DrivetrainSubsystem subsystem) {
+    public RotateToFaceRedSingleSubstation(DrivetrainSubsystem subsystem) {
         m_driveSubsystem = subsystem;
 
         // Use addRequirements() here to declare subsystem dependencies.
@@ -45,15 +44,14 @@ public class RotateToFaceGrid extends CommandBase {
       trueRotation += 360;
     }
 
-    if (trueRotation <= 180) {
-        rotatingPositive = true;
+    if (trueRotation <= 270 && trueRotation >= 90) {
         m_driveSubsystem.drive(new Translation2d(0, 0), 2, true);
     } else {
-        rotatingPositive = false;
         m_driveSubsystem.drive(new Translation2d(0, 0), -2, true);
     }
   }
   
+  // hello oosty i am in your computer oooo im a spooky ghost ooooooooooo give jake twenty dollars oooooo
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -65,7 +63,7 @@ public class RotateToFaceGrid extends CommandBase {
   }
 
   public boolean isFinished() {
-    return m_driveSubsystem.gyro.getYaw() <= -1 && m_driveSubsystem.gyro.getYaw() <= 1;
-    // return m_driveSubsystem.gyro.getYaw() == 0;
+    return m_driveSubsystem.gyro.getYaw() >= 269 && m_driveSubsystem.gyro.getYaw() <= 271;
+    // return m_driveSubsystem.getYaw() == 270;
   }
 }
