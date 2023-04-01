@@ -39,7 +39,6 @@ public final class Constants {
    */
   public static final double DRIVETRAIN_WHEELBASE_METERS = 0.54;
 
-  // TODO: Fine tune this value
   public static final double stickDeadband = 0.125;
 
   public static final int pigeonID = 13;
@@ -57,7 +56,6 @@ public final class Constants {
 
   public static final double rotationsPerOneFoot = 0.33;
 
-  // TODO : Configure ratios (look up)
   public static final double driveGearRatio = (8.14 / 1.0); // 6.75:1
   public static final double angleGearRatio = (150 / 7); // 12.8:1
 
@@ -102,9 +100,6 @@ public final class Constants {
   // Max speed is 4.630
   public static final double maxSpeed = 6380 / 60 * ModuleConfiguration.MK4I_L1.getDriveReduction() * ModuleConfiguration.MK4I_L1.getWheelDiameter() * Math.PI; 
 
-  //TODO: Test rotation
-
-  // 0.2?
   public static final double maxAngularVelocity = maxSpeed / Math.hypot(wheelBase / 2.0, trackWidth / 2.0);;
 
   public static final double TICKS_PER_ROTATION = 42;
@@ -114,8 +109,6 @@ public final class Constants {
   public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
   /* Motor Inverts */
-
-  // TODO: Figure out value
   public static final boolean driveInvert = false;
   public static final boolean angleInvert = true;
 
@@ -124,7 +117,6 @@ public final class Constants {
 
   public static final double aimTolerance = 4.5;
 
-  //TODO: Add offsets 
   /* Front Left Module - Module 0 */
   public static final class FrontLeftModule {
     public static final int driveMotorID = 7;

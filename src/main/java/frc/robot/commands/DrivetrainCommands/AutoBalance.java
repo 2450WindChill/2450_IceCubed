@@ -37,9 +37,9 @@ public class AutoBalance extends CommandBase {
     @Override
     public void execute() {
       if (m_subsystem.gyro.getPitch() < -8) {
-        m_subsystem.drive(new Translation2d(-0.5, 0), 0, false);
+        m_subsystem.drive(new Translation2d(-0.4, 0), 0, false);
       } else if (m_subsystem.gyro.getPitch() > 8) {
-        m_subsystem.drive(new Translation2d(0.5, 0), 0, false);
+        m_subsystem.drive(new Translation2d(0.4, 0), 0, false);
       } else {
         m_subsystem.drive(new Translation2d(0, 0), 0, false);
 

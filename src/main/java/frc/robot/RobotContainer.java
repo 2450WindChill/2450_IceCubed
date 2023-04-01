@@ -160,9 +160,9 @@ public class RobotContainer {
 
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
-    drive_bButton.onTrue(new RotateToFaceRedSingleSubstation(m_drivetrainSubsystem));
-    drive_xButton.onTrue(new RotateToFaceBlueSingleSubstation(m_drivetrainSubsystem));
-    drive_yButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
+    // drive_bButton.onTrue(new RotateToFaceRedSingleSubstation(m_drivetrainSubsystem));
+    // drive_xButton.onTrue(new RotateToFaceBlueSingleSubstation(m_drivetrainSubsystem));
+    // drive_yButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
 
   }
 
@@ -182,7 +182,7 @@ public class RobotContainer {
 
                   // Move onto charge station and balance
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(-1.5, 0), 0))
-                  .andThen(new WaitCommand(2.5))
+                  .andThen(new WaitCommand(2.7))
                   .andThen(new FieldCentricAutoDrive(m_drivetrainSubsystem, new Translation2d(0, 0), 0))
                   .andThen(new AutoBalance(m_drivetrainSubsystem));
 
@@ -223,7 +223,7 @@ public class RobotContainer {
     Shuffleboard.getTab("Competition Tab")
     .add("Auto Chooser", m_chooser)
     .withSize(2, 1)
-    .withPosition(5, 0);
+    .withPosition(5, 0); 
 
     Shuffleboard.getTab("Competition Tab")
     .add("Gyro", m_drivetrainSubsystem.gyro.getYaw())
