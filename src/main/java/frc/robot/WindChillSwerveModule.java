@@ -81,6 +81,12 @@ public class WindChillSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
+
+    if (reseedTimer.advanceIfElapsed(ENCODER_RESEED_SECONDS) &&
+      angleEncoder.getVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESEED_MAX_ANGULAR_VELOCITY) {
+      resetToAbsolute();
+      System.out.println(moduleNumber + " reseting to Absolute");
+    }
     // Custom optimize command, since default WPILib optimize assumes continuous
     // controller which
     // REV and CTRE are not
@@ -114,17 +120,12 @@ public class WindChillSwerveModule {
       newAngle -= 360;
     }
 
-    if (reseedTimer.advanceIfElapsed(ENCODER_RESEED_SECONDS) &&
-        angleEncoder.getVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESEED_MAX_ANGULAR_VELOCITY) {
-      resetToAbsolute();
-    }
-
-    angleController.setReference(newAngle, ControlType.kPosition);
+    //angleController.setReference(newAngle, ControlType.kPosition);
 
     if (moduleNumber == 0) {
       // System.err.println("Angle: " + newAngle);
     }
-    lastAngle = angle;
+    lastAngle = angle;    
   }
 
   private void resetToAbsolute() {
@@ -193,5 +194,9 @@ public class WindChillSwerveModule {
     return new SwerveModulePosition(
         (getDriveEncoder() / Constants.rotationsPerOneFoot) * 0.3048,
         getAngle());
+  }
+
+  public void setPosition(double position) {
+    integratedAngleEncoder.setPosition(position);
   }
 }

@@ -94,8 +94,8 @@ public class RobotContainer {
   public final JoystickButton drive_xButton = new JoystickButton(m_driverController, Button.kX.value);
   public final JoystickButton drive_yButton = new JoystickButton(m_driverController, Button.kY.value);
 
-  public final JoystickButton drive_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
-  public final JoystickButton drive_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  // public final JoystickButton drive_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
+  // public final JoystickButton drive_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
 
 
   public final JoystickButton op_aButton = new JoystickButton(m_operatorController, Button.kA.value);
@@ -104,6 +104,9 @@ public class RobotContainer {
   public final JoystickButton op_xButton = new JoystickButton(m_operatorController, Button.kX.value);
   public final JoystickButton op_leftBumper = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
   public final JoystickButton op_rightBumper = new JoystickButton(m_operatorController, Button.kRightBumper.value);
+
+   public final JoystickButton drive_leftBumper = new JoystickButton(m_driverController, Button.kLeftBumper.value);
+   public final JoystickButton drive_rightBumper = new JoystickButton(m_driverController, Button.kRightBumper.value);
 
   public Command centered;
   public Command shortSide;
@@ -136,10 +139,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // drive_aButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.BACK));
-    // drive_bButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.RIGHT));
-    // drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
-    // drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
+    drive_aButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.BACK));
+    drive_bButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.RIGHT));
+    drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
+    drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
 
     op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
         .andThen(new WaitCommand(5))
@@ -157,7 +160,8 @@ public class RobotContainer {
         .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
     op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
-    // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
+    drive_leftBumper.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.setPosition(0)));
+
     drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
     drive_yButton.onTrue(new RotateToFaceSingleSubstation(m_drivetrainSubsystem));
 
@@ -244,6 +248,7 @@ public class RobotContainer {
     } else {
       System.err.println("Alliance BLUE");
       m_LightySubsystem.SetLEDsToBlue();
+
     }
   }
 

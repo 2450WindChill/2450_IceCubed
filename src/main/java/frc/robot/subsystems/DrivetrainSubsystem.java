@@ -119,6 +119,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyro.setYaw(0);
   }
 
+  public void setPosition(double position) {
+    swerveModules[0].setPosition(position);
+    System.err.println("Setting position to 0");
+  }
+
   public void motorAuto() {
     System.err.println("Motor Auto go");
     drive(new Translation2d(-0.8, 0), gyro.getYaw(), true);
