@@ -1,0 +1,8 @@
+Driver controller
+ - Left joystick X: horizontal movement
+ - Left joystick Y: vertical movement
+ - Right joystick X: rotation
+
+ - Left bumper: yellow lights
+ - Right bumper: purple lights
+ - A button: front intake angle

@@ -143,16 +143,15 @@ public class RobotContainer {
     // drive_xButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.LEFT));
     // drive_yButton.whileTrue(new DirectionalDrive(m_drivetrainSubsystem, Direction.FOWARD));
 
-    op_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
+    drive_leftBumper.onTrue(new LEDYellowCommand(m_LightySubsystem)
         .andThen(new WaitCommand(5))
         .andThen(Commands.runOnce(() -> setLEDsToAlliance())));
 
-    op_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
+    drive_rightBumper.onTrue(new LEDPurpleCommand(m_LightySubsystem)
         .andThen(new WaitCommand(5)
         .andThen(Commands.runOnce(() -> setLEDsToAlliance()))));
 
-    // op_aButton
-    //     .onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+        drive_aButton.onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
     // op_bButton.onTrue(
     //     new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
     // op_xButton
