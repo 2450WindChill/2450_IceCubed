@@ -174,4 +174,8 @@ public final class Constants {
   // States
   public static int POV_right_dpad = 90;
   public static int POV_left_dpad = 270;
+
+  public static int translationXSpeed = 4;
+  public static int translationYSpeed = 4;
+  public static int translationRSpeed = 4;
 }

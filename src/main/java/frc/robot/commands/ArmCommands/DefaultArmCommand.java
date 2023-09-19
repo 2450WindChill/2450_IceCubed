@@ -27,7 +27,7 @@ public class DefaultArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-      m_subsystem.ManualInputs(RobotContainer.getOperatorController());
+      // m_subsystem.ManualInputs(RobotContainer.getOperatorController());
 
     }
 

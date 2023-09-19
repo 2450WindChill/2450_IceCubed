@@ -53,8 +53,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates;
     // System.err.println("CALLING DRIVE");
     if (isRobotCentric) {
+      // This will always be true for demo purposes
       swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(translation.getX(), translation.getY(), rotation)
+        new ChassisSpeeds((translation.getX() / Constants.translationXSpeed), (translation.getY() / Constants.translationYSpeed), (rotation / Constants.translationRSpeed))
       );
     } else {
       swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(

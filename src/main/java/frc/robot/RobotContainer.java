@@ -127,7 +127,8 @@ public class RobotContainer {
             () -> m_driverController.getLeftY(),
             () -> m_driverController.getLeftX(),
             () -> m_driverController.getRightX(),
-            () -> drive_rightBumper.getAsBoolean()
+            // True for robot oriented, for demo purposes (keep orientation constant)
+            () -> true
           ));
 
     configureBindings();
@@ -150,16 +151,16 @@ public class RobotContainer {
         .andThen(new WaitCommand(5)
         .andThen(Commands.runOnce(() -> setLEDsToAlliance()))));
 
-    op_aButton
-        .onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
-    op_bButton.onTrue(
-        new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
-    op_xButton
-        .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
-    op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
+    // op_aButton
+    //     .onTrue(new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.frontIntakeAngle));
+    // op_bButton.onTrue(
+    //     new NonRatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.singleSubstationAngle));
+    // op_xButton
+    //     .onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.midRowPlacingAngle));
+    // op_yButton.onTrue(new RatchetArmSequentialCommand(m_ArmSubsystem, m_PneumaticsSubsystem, Constants.backIntake));
 
     // drive_leftBumper.whileTrue(new LightAim(m_LimelightSubsystem, m_LightySubsystem, teamColor))
-    drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
+    // drive_aButton.onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyro()));
     // drive_bButton.onTrue(new RotateToFaceRedSingleSubstation(m_drivetrainSubsystem));
     // drive_xButton.onTrue(new RotateToFaceBlueSingleSubstation(m_drivetrainSubsystem));
     // drive_yButton.onTrue(new RotateToFaceGrid(m_drivetrainSubsystem));
